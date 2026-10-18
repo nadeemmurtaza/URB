@@ -1,0 +1,92 @@
+/* URB design tokens. Every colour, size, space, radius and motion value lives here and nowhere else.
+   Sources: ROYA (roles, motion curves, seven widths), ZUwithCamera (duration ladder, tap rules),
+   MILES (one-file colour discipline, view transitions), yaseenecom (clear-space and one-ink logo rules). */
+:root {
+  /* Colour: roles, not hues */
+  --paper: #F7F2EB;
+  --paper-sunk: #EFE7DC;
+  --card: #FFFDF9;
+  --ink: #1E2420;
+  --ink-2: #4A524B;
+  --ink-3: #5F665F;
+  --line-rgb: 30 36 32;
+  --line: rgb(var(--line-rgb) / 0.14);
+  --line-strong: rgb(var(--line-rgb) / 0.32);
+  --scrim: rgb(30 36 32 / 0.48);
+
+  --rose: #B8626E;
+  --rose-deep: #8F3F4B;
+  --blush: #EBCFCB;
+  --sage: #7F9482;
+  --forget: #8EA7D8;
+  --forest: #1F2B25;
+  --on-forest: #F7F2EB;
+  --on-forest-dim: #C9D0C6;
+  --error: #A3342A;
+  --ok: #2F6B4A;
+  --on-ink: #F7F2EB;
+
+  /* Type: Cormorant Garamond (display), Manrope (text). Scale 1.25 on phones, 1.333 from 768. */
+  --font-display: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --font-text: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --fs-2xl: clamp(2rem, 1.5rem + 2.2vw, 3rem);
+  --fs-3xl: clamp(2.75rem, 1.8rem + 4.2vw, 5rem);
+  --lh-tight: 1.05;
+  --lh-snug: 1.25;
+  --lh-body: 1.6;
+  --track-caps: 0.14em;
+
+  /* Space: 8pt grid, half-step 4 */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+  --section: clamp(var(--s-7), 12vw, 128px);
+  --gutter: 20px;
+  --container: 1200px;
+  --phi: 1.618;
+  --col-phi: minmax(0, 1.618fr);
+  --col-1: minmax(0, 1fr);
+
+  /* Shape */
+  --r-sm: 4px;
+  --r-md: 12px;
+  --r-lg: 24px;
+  --r-pill: 999px;
+  --tap: 48px;
+  --shadow-1: 0 1px 2px rgb(30 36 32 / 0.06), 0 4px 12px rgb(30 36 32 / 0.06);
+  --shadow-2: 0 8px 32px rgb(30 36 32 / 0.14);
+
+  /* Motion: ROYA curves, ZU duration ladder. Transform and opacity only. */
+  --dur-micro: 120ms;
+  --dur-ui: 240ms;
+  --dur-content: 560ms;
+  --dur-cine: 900ms;
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-panel: cubic-bezier(0.77, 0, 0.18, 1);
+  --lift: 4px;
+  --press: 0.98;
+  --arrive: 0.97;
+  --travel: 24px;
+
+  /* Layers */
+  --z-header: 40;
+  --z-sticky: 30;
+  --z-toast: 90;
+}
+@media (min-width: 768px) { :root { --gutter: 40px; } }
+@media (min-width: 1024px) { :root { --gutter: 56px; } }
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-micro: 0ms; --dur-ui: 0ms; --dur-content: 0ms; --dur-cine: 0ms; --travel: 0px; --lift: 0px; }
+}

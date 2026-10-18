@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Track an order · URB</title>
+<meta name="description" content="Follow your URB order.">
+<meta name="theme-color" content="#F7F2EB">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body id="top" data-page="track">
+<main id="main">
+<div class="container"><div class="cols2"><div class="stack"><p class="eyebrow">Track</p><h1 class="h1">Where is my bouquet?</h1><p class="lede">Enter the order number from your confirmation.</p>
+<form class="form-card" id="track" novalidate><div class="field"><label for="t-id">Order number</label><input id="t-id" name="id" placeholder="URB-123456" autocomplete="off"><p class="field__error" data-error hidden></p></div><button class="btn btn--ink" type="submit">Track</button><a class="link" href="track.html?o=URB-100000">Try a demo order</a></form></div><div id="track-out"></div></div></div>
+</main>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

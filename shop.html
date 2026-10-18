@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shop · URB</title>
+<meta name="description" content="All URB bouquets. Filter by flower, price or occasion.">
+<meta name="theme-color" content="#F7F2EB">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body id="top" data-page="shop">
+<main id="main">
+<div class="container"><div class="page-head"><p class="eyebrow">Shop</p><h1 class="h1">All bouquets</h1></div>
+<div class="toolbar"><div class="chips" id="chips" role="group" aria-label="Filter by type"></div>
+<div class="controls"><div class="field"><label class="sr" for="shop-q">Search</label><input id="shop-q" type="search" placeholder="Search flowers or names"></div>
+<label class="sr" for="occ-sel">Occasion</label><select id="occ-sel"></select>
+<label class="sr" for="sort">Sort</label><select id="sort"><option value="featured">Featured</option><option value="low">Price, low to high</option><option value="high">Price, high to low</option></select>
+<span class="count" id="count" aria-live="polite"></span></div>
+<button class="link" id="reset" type="button">Clear filters</button></div>
+<div class="shop-body"><div class="grid" id="grid"></div></div></div>
+</main>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

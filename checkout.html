@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Checkout · URB</title>
+<meta name="description" content="Delivery details and payment.">
+<meta name="theme-color" content="#F7F2EB">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body id="top" data-page="checkout">
+<main id="main">
+<div class="container"><div class="page-head"><p class="eyebrow">Step 2 of 2</p><h1 class="h1">Checkout</h1><p class="note">No account needed.</p></div>
+<div id="co-root"><div class="split"><form class="co" id="co" novalidate>
+<div class="form-card"><h2>Who and where</h2>
+<div class="field-row"><div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" autocomplete="name"><p class="field__error" data-for="name" hidden></p></div>
+<div class="field"><label for="c-phone">Mobile number</label><input id="c-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0300 1234567"><p class="field__error" data-for="phone" hidden></p></div></div>
+<div class="field"><label for="c-email">Email <span class="opt">optional</span></label><input id="c-email" name="email" type="email" inputmode="email" autocomplete="email"><p class="field__error" data-for="email" hidden></p></div>
+<div class="field-row"><div class="field"><label for="city">City</label><select id="city" name="city" autocomplete="address-level2"></select><p class="field__error" data-for="city" hidden></p></div>
+<div class="field"><label for="c-addr">Full address</label><input id="c-addr" name="address" autocomplete="street-address"><p class="field__error" data-for="address" hidden></p></div></div></div>
+<div class="form-card"><h2>When</h2>
+<div class="field"><label for="c-date">Delivery date</label><input id="c-date" name="date" type="date"><p class="field__error" data-for="date" hidden></p></div>
+<fieldset><legend class="legend">Time slot</legend><div class="choices choices--2"><label class="choice"><input type="radio" name="slot" value="Morning" checked><span><b>Morning</b><small>9am to 1pm</small></span></label><label class="choice"><input type="radio" name="slot" value="Evening"><span><b>Evening</b><small>4pm to 8pm</small></span></label></div></fieldset>
+<div class="field"><label for="c-msg">Card message <span class="opt">optional</span></label><textarea id="c-msg" name="msg" rows="3" maxlength="160"></textarea></div></div>
+<div class="form-card"><h2>Payment</h2>
+<fieldset><legend class="sr">Payment method</legend><div class="choices">
+<label class="choice"><input type="radio" name="pay" value="cod" checked><span><b>Cash on delivery</b><small>Pay the rider when it arrives</small></span></label>
+<label class="choice"><input type="radio" name="pay" value="bank"><span><b>Bank transfer</b><small>We message you the account details</small></span></label>
+<label class="choice"><input type="radio" name="pay" value="card"><span><b>Card</b><small>We message you a secure payment link</small></span></label></div></fieldset>
+<p class="note" data-pay="bank" hidden>This is a demo. In a live shop, bank details would arrive by message right after you order.</p>
+<p class="note" data-pay="card" hidden>This is a demo. No card is taken here.</p></div>
+<button class="btn btn--ink btn--block" type="submit">Place order</button><a class="btn btn--text btn--block" href="cart.html">← Back to bag</a></form>
+<aside class="panel" aria-label="Order summary"><h2 class="panel__t">Your order</h2><div id="co-summary"></div></aside></div></div></div>
+</main>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
