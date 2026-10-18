@@ -61,6 +61,23 @@
   setTimeout(function () { $$('.sp:not(.is-in)').forEach(function (e) { var r = e.getBoundingClientRect(); if (r.top < innerHeight * 1.2) e.classList.add('is-in'); }); }, 2500);
   var raf; new MutationObserver(function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(splitAll); }).observe(body, { childList: true, subtree: true });
 
+  /* ---- Notes beside pictures are typed out when they appear, then the arrow or underline draws ---- */
+  var tio = new IntersectionObserver(function (en) {
+    en.forEach(function (x) {
+      if (!x.isIntersecting) return; tio.unobserve(x.target);
+      var n = x.target, cs = $$('.tc', n), i = 0;
+      var t = setInterval(function () {
+        if (i < cs.length) { cs[i++].classList.add('on'); return; }
+        clearInterval(t); $$('.doodle', n).forEach(function (d) { d.setAttribute('data-in', ''); }); n.classList.add('go');
+      }, 42);
+    });
+  }, { threshold: 0.9, rootMargin: '0px 0px -8% 0px' });
+  $$('.note, .hero__note').forEach(function (n) {
+    var h = $('.hand', n); if (!h) return;
+    h.innerHTML = h.innerHTML.replace(/(<br\s*\/?>)|([^<]+)/g, function (m, br, txt) { return br ? br : Array.from(txt).map(function (c) { return '<span class="tc">' + esc(c) + '</span>'; }).join(''); });
+    n.classList.add('typed'); tio.observe(n);
+  });
+
   /* ---- Numbers count up ---- */
   var cio = new IntersectionObserver(function (en) {
     en.forEach(function (x) {

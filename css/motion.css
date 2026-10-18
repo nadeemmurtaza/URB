@@ -77,8 +77,15 @@
 
 /* Cut-outs: one slow, small float on the hero and the story pieces only */
 @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
-.scatter__cuts .cut, .tl__art .cut, .lost__img { animation: float 7s ease-in-out infinite; }
-.scatter__cuts .cut:nth-child(2n), .tl__art .cut:nth-child(2n) { animation-delay: -3s; animation-duration: 8s; }
+.fig .cut, .lost__img { animation: float 7s ease-in-out infinite; }
+.fig:nth-child(2n) .cut { animation-delay: -3s; animation-duration: 8s; }
+
+/* Photos sway and float, craft-index pictures drift, all slowly */
+@keyframes sway { 0%, 100% { rotate: -1.2deg; translate: 0 0; } 50% { rotate: 1.2deg; translate: 0 -6px; } }
+.split2__art .art, .parcel .art, .tl__art .art--soft { animation: sway 9s ease-in-out infinite; transform-origin: 50% 70%; }
+.tl__art .art--soft, .parcel--wide .art { animation-delay: -4s; }
+.index__img { animation: float 8s ease-in-out infinite; }
+.index__row:nth-child(even) .index__img { animation-delay: -4s; animation-duration: 9s; }
 
 /* Background: the gradient drifts very slowly; nothing rises, nothing follows the cursor */
 .bg__orb--a { animation-duration: 30s; } .bg__orb--b { animation-duration: 36s; } .bg__orb--c { animation-duration: 40s; } .bg__orb--d { animation-duration: 34s; }
@@ -88,6 +95,15 @@
 .marquee__track { display: flex; align-items: center; gap: var(--s-5); width: max-content; animation: marq 60s linear infinite; }
 .marquee:hover .marquee__track { animation-play-state: paused; }
 @keyframes marq { to { translate: -50% 0; } }
+
+
+/* Notes type themselves out when they scroll into view, then their doodle draws along its length */
+.m .typed .tc { opacity: 0; }
+.m .typed .tc.on { opacity: 1; }
+.m .typed .hand:not([data-in]), .m .typed .hand[data-in] { opacity: 1; animation: none; }
+.m .typed:not(.go) .doodle path { stroke-dashoffset: 1; }
+.m .typed .doodle path { transition-duration: var(--dur-draw); }
+.m .typed .doodle { animation: none; }
 
 /* Buttons: a slow sheen, a soft press */
 .btn--ink { background: var(--glass-gloss), linear-gradient(100deg, transparent 32%, var(--shine) 50%, transparent 68%) no-repeat 140% 0 / 240% 100%, var(--glass-ink); animation: shine 6s ease-in-out infinite; }
@@ -114,10 +130,6 @@ html[data-hdr="hide"] .header { translate: 0 -105%; }
 @supports (animation-timeline: view()) {
   .progress { display: block; position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 99; background: var(--script); transform-origin: 0 50%; scale: 0 1; animation: grow linear both; animation-timeline: scroll(root); pointer-events: none; }
   @keyframes grow { to { scale: 1 1; } }
-  .scatter__cuts .cut:nth-child(odd) { animation: float 7s ease-in-out infinite, par-up linear both; animation-timeline: auto, view(); animation-range: normal, cover; }
-  .scatter__cuts .cut:nth-child(even) { animation: float 8s ease-in-out infinite -3s, par-down linear both; animation-timeline: auto, view(); animation-range: normal, cover; }
-  @keyframes par-up { from { translate: 0 50px; } to { translate: 0 -50px; } }
-  @keyframes par-down { from { translate: 0 -40px; } to { translate: 0 60px; } }
   .tl__spine path { animation: spine linear both; animation-timeline: view(); animation-range: entry 10% exit 60%; stroke-dashoffset: 1; }
   @keyframes spine { to { stroke-dashoffset: 0; } }
 }
