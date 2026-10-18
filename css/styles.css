@@ -737,6 +737,12 @@ main { overflow-x: clip; }
 
 /* A drawn stem growing from the poppy, part of the same plant so it moves with it */
 .hero__flower .cut { position: relative; z-index: 2; }
-.hero__stem { inset-block-start: 82%; inset-inline-start: 46%; width: auto; height: calc(var(--s-8) + var(--s-7)); z-index: 1; stroke: var(--olive-deep); }
+.hero__stem { inset-block-start: 70%; inset-inline-start: 46%; width: auto; height: calc(var(--s-8) + var(--s-7)); z-index: 1; stroke: var(--olive-deep); }
 .hero__stem path { stroke-width: 7px; }
 .hero__stem path:nth-child(n+2) { stroke-width: 4px; fill: color-mix(in srgb, var(--olive-deep) 30%, transparent); }
+
+/* Stem scales with the flower. Its strokes scale with it too (no fixed-pixel strokes, which break the draw-on dash at large sizes) */
+.hero__stem { height: 88%; }
+.hero__stem path { vector-effect: none; stroke-width: 6.5; }
+.hero__stem path:nth-child(n+2) { stroke-width: 3.5; }
+@media (min-width: 1024px) { .hero__flower { padding-block-end: calc(var(--s-8) * 2 + var(--s-6)); } }
