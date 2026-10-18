@@ -49,3 +49,15 @@ All in `css/motion.css` and `js/motion.js`, only transform, opacity, clip-path a
 - **Ambient:** gradient orbs drifting, hearts and sparkles rising behind the whole page, two ribbons of words running across the home page, every cut-out floating or rocking out of step with its neighbour.
 - **Pointer:** a five-sparkle cursor trail and hero parallax (values travel through one constructable stylesheet rule, never inline styles); a burst of hearts when something goes in the bag; buttons shine, stitch and squash; the header slips away when scrolling down.
 - **First visit:** a short logo intro, once per session, skippable with a click.
+
+## Audit log (latest pass)
+
+Checked every page at 390 and 1280 with an automated dead-space detector (gaps over 170 / 260px) plus screenshots.
+- Fixed: craft menu appeared twice (header and chips) → one menu, in the header.
+- Fixed: product cards had uneven heights → fixed 4:5 media box, two-line clamped names, price row and button aligned across each row.
+- Fixed: cart listed each item twice → summary shows totals only; unit price no longer repeated.
+- Fixed: empty column beside long product info and long cart → gallery and item list are sticky on desktop.
+- Fixed: sticky filter bar was a hard-edged box → filters flow with the page.
+- Fixed: "Check out" headline letters collided with the script word.
+- Changed: headings use Rubik 800 (flat-topped, round-shouldered, closest free match to the urb logo); buttons are glass (blur, gloss highlight, inner light edge, a doodle sparkle on each).
+- Known: full-page screenshots show the fixed background only once; in a browser it stays behind the whole page.

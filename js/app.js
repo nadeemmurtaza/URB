@@ -24,7 +24,14 @@
   }
   function itemArt(it) { return '<img class="art' + (it.soft ? ' art--soft' : '') + '" src="' + it.img + '" alt="' + esc(it.name) + ', crocheted by URB" width="800" height="800" loading="lazy" decoding="async">'; }
   function DOOD(n, c) { return window.URB_DOODLES(n, c); }
+  function btnDoodles(root) {
+    $$('.btn:not(.btn--text):not([data-d])', root || document).forEach(function (b) {
+      b.setAttribute('data-d', '');
+      b.insertAdjacentHTML('beforeend', '<i data-doodle="sparkle" class="btn__d ' + (b.classList.contains('btn--ink') ? 'doodle--rose' : 'doodle--mauve') + '"></i>');
+    });
+  }
   function doodles(root) {
+    btnDoodles(root);
     $$('[data-doodle]', root || document).forEach(function (el) {
       var t = document.createElement('template'); t.innerHTML = DOOD(el.getAttribute('data-doodle'), el.className);
       if (t.content.firstChild) el.replaceWith(t.content.firstChild);
@@ -186,7 +193,6 @@
     if (!c) { root.innerHTML = empty('We could not find that collection', 'Choose one of our crafts instead.', 'index.html#crafts', 'See all crafts'); return; }
     document.title = c.label + ' \u00B7 URB';
     $('#coll-eyebrow').textContent = c.label; $('#coll-title').textContent = c.title; $('#coll-lede').textContent = c.lede;
-    $('#coll-tabs').innerHTML = [['shop.html', 'Bouquets', false]].concat(D.collections.map(function (x) { return ['collection.html?c=' + x.id, x.label, x.id === c.id]; })).map(function (t) { return '<a class="chip" href="' + t[0] + '"' + (t[2] ? ' aria-current="page" aria-pressed="true"' : ' aria-pressed="false"') + '>' + t[1] + '</a>'; }).join('');
     root.innerHTML = c.items.map(function (it, i) { return '<article class="card" data-reveal><button class="card__media card__media--btn" data-action="peek" data-c="' + c.id + '" data-i="' + i + '" aria-label="View ' + esc(it.name) + '">' + itemArt(it) + '</button><div class="card__body"><h3 class="card__name">' + esc(it.name) + '</h3><p class="hand hand--olive">' + esc((it.facts || [''])[0]) + '</p><p class="note">Made to order \u00B7 price on request</p><a class="btn btn--line btn--block" href="contact.html?c=' + c.id + '&item=' + encodeURIComponent(it.name) + '#custom">Enquire</a></div></article>'; }).join('');
   }
   function mountProduct() {
@@ -228,8 +234,8 @@
     $('#sticky-name').textContent = p.name; $('#sticky-price').textContent = fmt(p.price);
     $('#sticky-add').addEventListener('click', function () { $('#buy').requestSubmit($('#buy [data-intent="add"]')); });
   }
-  function summaryHTML(t) {
-    return '<ul class="lines lines--ro">' + cartLines(false) + '</ul><dl class="sum"><div><dt>Subtotal</dt><dd><bdi dir="ltr">' + fmt(t.sub) + '</bdi></dd></div>' + (t.disc ? '<div><dt>Promo ' + D.promo.code + '</dt><dd><bdi dir="ltr">−' + fmt(t.disc) + '</bdi></dd></div>' : '') + '<div><dt>Delivery</dt><dd><bdi dir="ltr">' + fmt(t.fee) + '</bdi></dd></div><div class="sum__total"><dt>Total</dt><dd><bdi dir="ltr">' + fmt(t.total) + '</bdi></dd></div></dl>' + (t.saved ? '<p class="note note--ok">You are saving ' + fmt(t.saved) + ' on this bag.</p>' : '');
+  function summaryHTML(t, withLines) {
+    return (withLines === false ? '' : '<ul class="lines lines--ro">' + cartLines(false) + '</ul>') + '<dl class="sum"><div><dt>Subtotal</dt><dd><bdi dir="ltr">' + fmt(t.sub) + '</bdi></dd></div>' + (t.disc ? '<div><dt>Promo ' + D.promo.code + '</dt><dd><bdi dir="ltr">−' + fmt(t.disc) + '</bdi></dd></div>' : '') + '<div><dt>Delivery</dt><dd><bdi dir="ltr">' + fmt(t.fee) + '</bdi></dd></div><div class="sum__total"><dt>Total</dt><dd><bdi dir="ltr">' + fmt(t.total) + '</bdi></dd></div></dl>' + (t.saved ? '<p class="note note--ok">You are saving ' + fmt(t.saved) + ' on this bag.</p>' : '');
   }
   function promoForm(t) {
     return '<form class="promo" data-form="promo" novalidate><label for="promo-in">Promo code</label><div class="promo__row"><input id="promo-in" name="code" autocomplete="off" placeholder="' + D.promo.code + '"' + (t.promo ? ' value="' + D.promo.code + '" readonly' : '') + '><button class="btn btn--line" type="submit">' + (t.promo ? 'Remove' : 'Apply') + '</button></div><p class="field__error" data-error hidden></p><p class="field__hint">Try ' + D.promo.code + ' for ' + D.promo.pct + '% off.</p></form>';
@@ -237,7 +243,7 @@
   function renderCartPage() {
     var t = totals(), r = $('#cart-root');
     if (!t.ls.length) { r.innerHTML = empty('Your bag is empty', 'Choose a bouquet and it will wait for you here.', 'shop.html', 'Browse bouquets'); return; }
-    r.innerHTML = '<div class="split"><section aria-labelledby="bag-h"><h2 class="sr" id="bag-h">Items</h2><ul class="lines">' + cartLines(true) + '</ul><a class="btn btn--text" href="shop.html">← Keep browsing</a></section><aside class="panel" aria-label="Order summary"><h2 class="panel__t">Summary</h2>' + summaryHTML(t) + promoForm(t) + '<a class="btn btn--ink btn--block" href="checkout.html">Checkout</a></aside></div>';
+    r.innerHTML = '<div class="split"><section aria-labelledby="bag-h"><h2 class="sr" id="bag-h">Items</h2><ul class="lines">' + cartLines(true) + '</ul><a class="btn btn--text" href="shop.html">← Keep browsing</a></section><aside class="panel" aria-label="Order summary"><h2 class="panel__t">Summary</h2>' + summaryHTML(t, false) + promoForm(t) + '<a class="btn btn--ink btn--block" href="checkout.html">Checkout</a></aside></div>';
   }
   function renderCheckoutSummary() {
     var t = totals(), r = $('#co-summary'); if (!r) return;

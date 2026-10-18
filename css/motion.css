@@ -182,10 +182,10 @@
 @keyframes marq { to { translate: -50% 0; } }
 
 /* ---------- Buttons: a shine sweeps across, stitches march under outlined ones, presses squash ---------- */
-.btn { overflow: hidden; }
-.btn--ink::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, var(--shine) 50%, transparent 70%); translate: -130% 0; animation: shine 4.2s ease-in-out infinite; pointer-events: none; }
-@keyframes shine { 0%, 55% { translate: -130% 0; } 100% { translate: 130% 0; } }
-.btn--line::after { content: ""; position: absolute; inset-inline: var(--s-4); bottom: 7px; height: 3px; background: repeating-linear-gradient(90deg, currentColor 0 7px, transparent 7px 13px); opacity: 0; transition: opacity var(--dur-ui) var(--ease-settle); animation: stitch 0.5s linear infinite; }
+.btn--ink { background: var(--glass-gloss), linear-gradient(100deg, transparent 32%, var(--shine) 50%, transparent 68%) no-repeat 140% 0 / 240% 100%, var(--glass-ink); animation: shine 4.2s ease-in-out infinite; }
+.btn--ink:hover { background: var(--glass-gloss), var(--action-hover); animation: none; }
+@keyframes shine { 0%, 50% { background-position: 0 0, 140% 0, 0 0; } 100% { background-position: 0 0, -40% 0, 0 0; } }
+.btn--line::after { content: ""; position: absolute; inset-inline: var(--s-5); bottom: 8px; height: 3px; background: repeating-linear-gradient(90deg, currentColor 0 7px, transparent 7px 13px); opacity: 0; transition: opacity var(--dur-ui) var(--ease-settle); animation: stitch 0.5s linear infinite; }
 .btn--line:hover::after { opacity: 1; }
 @keyframes stitch { to { background-position-x: 13px; } }
 .btn:active { scale: 0.94; }
