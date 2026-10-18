@@ -17,10 +17,9 @@
   var page = document.body.getAttribute('data-page');
   var params = new URLSearchParams(location.search);
 
-  /* ---------- Pictures: cut-outs sit straight on the page; a few photos are feathered into it ---------- */
-  function art(p, view, eager) {
-    var photo = view === 'photo', src = photo ? p.photo : p.img, soft = photo || p.soft;
-    return '<img class="art' + (soft ? ' art--soft' : '') + '" src="' + src + '" alt="' + esc(p.name) + ', crocheted by URB" width="800" height="800" decoding="async"' + (eager ? '' : ' loading="lazy"') + '>';
+  /* ---------- Pictures: products show their original shop photo; story cut-outs sit straight on the page ---------- */
+  function art(p, eager) {
+    return '<img class="art art--orig" src="' + p.photo + '" alt="' + esc(p.name) + ', crocheted by URB" width="400" height="400" decoding="async"' + (eager ? '' : ' loading="lazy"') + '>';
   }
   function itemArt(it) { return '<img class="art' + (it.soft ? ' art--soft' : '') + '" src="' + it.img + '" alt="' + esc(it.name) + ', crocheted by URB" width="800" height="800" loading="lazy" decoding="async">'; }
   function DOOD(n, c) { return window.URB_DOODLES(n, c); }
@@ -149,7 +148,7 @@
   function mountIndex() {
     var P = function (id) { return byId(id); };
     var rows = [
-      { href: 'shop.html', w: 'Bouquets', sub: '20 designs, from ' + fmt(2650), img: P('the-love').img, alt: 'The Love Bouquet' },
+      { href: 'shop.html', w: 'Bouquets', sub: PRODUCTS.filter(function (p) { return p.kind === 'bouquet'; }).length + ' designs, from ' + fmt(PRODUCTS.filter(function (p) { return p.kind === 'bouquet'; }).reduce(function (m, p) { return Math.min(m, p.price); }, Infinity)), img: P('the-love').cut, alt: 'The Love Bouquet' },
       { href: 'collection.html?c=stems', w: 'Single stems', sub: '11 inch long, never wilt', img: D.collections[0].items[0].img, alt: 'Corn poppy' },
       { href: 'collection.html?c=plushies', w: 'Plushies', sub: 'soft and huggable', img: D.collections[1].items[0].img, alt: 'Chonky cat plushie' },
       { href: 'collection.html?c=wear', w: 'Wear', sub: 'cardigans and tops', img: D.collections[2].items[0].img, alt: 'Patchwork cardigan' },
@@ -173,8 +172,8 @@
       if (st.sort === 'low') l.sort(function (a, b) { return a.price - b.price; });
       if (st.sort === 'high') l.sort(function (a, b) { return b.price - a.price; });
       $$('#chips .chip').forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-cat') === st.cat); });
-      $('#count').textContent = l.length + (l.length === 1 ? ' bouquet' : ' bouquets');
-      $('#grid').innerHTML = l.length ? l.map(card).join('') : '<div class="grid__empty">' + empty('No bouquet matches that', 'Loosen a filter and the garden opens up again.', 'shop.html', 'Clear all filters') + '</div>';
+      $('#count').textContent = l.length + (l.length === 1 ? ' flower' : ' flowers');
+      $('#grid').innerHTML = l.length ? l.map(card).join('') : '<div class="grid__empty">' + empty('Nothing matches that', 'Loosen a filter and the garden opens up again.', 'shop.html', 'Clear all filters') + '</div>';
       reveal();
     }
     $('#chips').addEventListener('click', function (e) { var b = e.target.closest('[data-cat]'); if (b) { st.cat = b.getAttribute('data-cat'); draw(); } });
@@ -198,22 +197,21 @@
     var p = byId(params.get('id')), root = $('#pdp');
     if (!p) { $('.sticky-buy').hidden = true; $('.related').hidden = true; root.innerHTML = empty('We could not find that bouquet', 'It may have sold out or moved. The rest of the garden is open.', 'shop.html', 'Browse bouquets'); document.title = 'Not found · URB'; return; }
     document.title = p.name + ' · URB';
-    var min = new Date(Date.now() + 864e5).toISOString().slice(0, 10), views = ['full', 'photo'];
+    var min = new Date(Date.now() + 864e5).toISOString().slice(0, 10);
     var saved = getWish().indexOf(p.id) > -1;
-    root.innerHTML = '<div class="pdp__gallery"><div class="pdp__main" id="pdp-main">' + art(p, 'full', true) + '<div class="pdp__notes" aria-hidden="true">' + p.inside.slice(0, 3).map(function (t, i) { return '<p class="pdp__note pdp__note--' + (i + 1) + '"><span class="hand' + (i === 2 ? ' hand--olive' : '') + '">' + esc(t) + '</span><i data-doodle="' + ['arrow-curl', 'arrow-curl', 'arrow-up'][i] + '" class="d-s' + (i === 1 ? ' is-flip' : '') + ' doodle--ink"></i></p>'; }).join('') + '</div></div><div class="pdp__thumbs" role="group" aria-label="Views">' + views.map(function (v, i) { return '<button class="thumb" data-view="' + v + '" aria-pressed="' + (i === 0) + '" aria-label="' + (v === 'full' ? 'Cut-out view' : 'Original photo') + '">' + art(p, v) + '</button>'; }).join('') + '</div></div>' +
+    root.innerHTML = '<div class="pdp__gallery"><div class="pdp__main" id="pdp-main">' + art(p, true) + '</div></div>' +
       '<div class="pdp__info"><nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="shop.html">Shop</a><span aria-hidden="true">/</span><span aria-current="page">' + esc(p.name) + '</span></nav>' +
       '<h1 class="pdp__title">' + esc(p.name) + '</h1><p class="price price--lg"><bdi dir="ltr"><span class="price__now">' + fmt(p.price) + '</span>' + (p.was ? ' <s class="price__was">' + fmt(p.was) + '</s> <span class="tag tag--inline">Save ' + fmt(p.was - p.price) + '</span>' : '') + '</bdi></p>' +
       '<p class="lede">' + esc(p.line) + '</p><p class="stock" data-low="' + (p.stock <= 3) + '">' + stockNote(p) + '</p>' +
-      '<h2 class="hand">what is inside</h2><ul class="inside">' + p.inside.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>' +
+      (p.inside.length ? '<h2 class="hand">what is inside</h2><ul class="inside">' + p.inside.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>' : '') +
       '<form class="buy" id="buy" novalidate><div class="field"><label for="date">Delivery date</label><input id="date" name="date" type="date" min="' + min + '" required><p class="field__hint">Pick any day from tomorrow.</p><p class="field__error" data-error hidden></p></div>' +
       '<div class="field"><label for="msg">Card message <span class="opt">optional</span></label><textarea id="msg" name="msg" rows="3" maxlength="160" placeholder="Written by hand, 160 characters"></textarea></div>' +
       '<div class="buy__row"><div class="qty qty--lg" role="group" aria-label="Quantity"><button type="button" class="qty__b" data-action="pdp-dec" aria-label="Decrease">−</button><output class="qty__n" id="pq">1</output><button type="button" class="qty__b" data-action="pdp-inc" aria-label="Increase">+</button></div><button class="btn btn--ink btn--grow" type="submit" data-intent="add">Add to bag</button></div>' +
       '<button class="btn btn--line btn--block" type="submit" data-intent="buy">Buy now</button>' +
       '<button class="btn btn--text btn--block" type="button" data-action="wish" data-id="' + p.id + '" aria-pressed="' + saved + '">' + icon.heart + '<span data-wish-label>' + (saved ? 'Saved' : 'Save for later') + '</span></button></form>' +
-      '<div class="acc"><details><summary>Delivery</summary><p>Delivery is <bdi dir="ltr">' + fmt(p.fee) + '</bdi> for this bouquet. Each bouquet is wrapped and ribboned, then packed to arrive upright. <a href="delivery.html">Full delivery details</a>.</p></details><details><summary>Care</summary><p>Crochet never wilts and needs no water. Keep it dry and out of direct sun, and dust it with a soft brush. <a href="delivery.html#care">Care guide</a>.</p></details><details><summary>Made by hand</summary><p>Each stem is crocheted by hand, so small differences in shape or yarn shade are part of the piece. Ask us about colour changes on the <a href="contact.html#custom">custom bouquet form</a>.</p></details></div></div>';
+      '<div class="acc"><details><summary>Delivery</summary><p>Delivery is <bdi dir="ltr">' + fmt(p.fee) + '</bdi> for this ' + (p.kind === 'bouquet' ? 'bouquet. Each bouquet is wrapped and ribboned, then packed to arrive upright' : 'item. Every piece is packed with care to arrive in shape') + '. <a href="delivery.html">Full delivery details</a>.</p></details><details><summary>Care</summary><p>Crochet never wilts and needs no water. Keep it dry and out of direct sun, and dust it with a soft brush. <a href="delivery.html#care">Care guide</a>.</p></details><details><summary>Made by hand</summary><p>Each stem is crocheted by hand, so small differences in shape or yarn shade are part of the piece. Ask us about colour changes on the <a href="contact.html#custom">custom bouquet form</a>.</p></details></div></div>';
     var qty = 1;
     root.addEventListener('click', function (e) {
-      var v = e.target.closest('[data-view]'); if (v) { var nt = $('.pdp__notes', $('#pdp-main')); $('#pdp-main').innerHTML = art(p, v.getAttribute('data-view'), true) + (nt ? nt.outerHTML : ''); $('.pdp__notes', $('#pdp-main')).hidden = v.getAttribute('data-view') === 'photo'; $$('.thumb').forEach(function (t) { t.setAttribute('aria-pressed', t === v); }); }
       var a = e.target.closest('[data-action]'); if (!a) return;
       if (a.dataset.action === 'pdp-inc') qty = Math.min(p.stock, qty + 1);
       if (a.dataset.action === 'pdp-dec') qty = Math.max(1, qty - 1);
