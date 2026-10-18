@@ -185,15 +185,6 @@ button { cursor: pointer; background: none; border: 0; padding: 0; touch-action:
 .scatter__cuts .fig:nth-child(odd) { transform: rotate(-6deg); }
 .scatter__cuts .fig:nth-child(even) { transform: rotate(5deg) translateY(calc(-1 * var(--s-3))); }
 .scatter__cuts .fig:hover { transform: rotate(0) scale(1.08); }
-@media (min-width: 1024px) {
-  .scatter { min-height: 520px; align-content: center; }
-  .scatter__cuts { display: contents; }
-  .scatter__cuts .fig { position: absolute; width: clamp(110px, 11vw, 170px); }
-  .scatter__cuts .fig:nth-child(1) { inset-block-start: 4%; inset-inline-start: var(--s-3); }
-  .scatter__cuts .fig:nth-child(2) { inset-block-start: 0; inset-inline-end: var(--s-4); }
-  .scatter__cuts .fig:nth-child(3) { inset-block-end: 4%; inset-inline-start: 6%; }
-  .scatter__cuts .fig:nth-child(4) { inset-block-end: 2%; inset-inline-end: 6%; }
-}
 
 /* Craft index: giant words with the thing itself beside them */
 .index { display: grid; }
@@ -720,3 +711,10 @@ main { overflow-x: clip; }
 /* No thumbnail column any more: the photo takes the whole gallery */
 .pdp__gallery { grid-template-columns: minmax(0, 1fr); }
 .pdp__main { width: 100%; }
+
+/* Scatter: a plain row of four, so notes never run into the headline or the ribbon above */
+@media (min-width: 1024px) {
+  .scatter { gap: var(--s-7); }
+  .scatter__cuts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); align-items: end; width: 100%; }
+  .scatter__cuts .fig { position: relative; width: 100%; max-width: 260px; justify-self: center; }
+}
