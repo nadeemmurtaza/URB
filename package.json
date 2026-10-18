@@ -1,0 +1,9 @@
+{
+  "name": "urb",
+  "private": true,
+  "scripts": {
+    "dev": "npx http-server -p 4173 .",
+    "verify": "node scripts/verify.mjs",
+    "deploy": "npx wrangler deploy"
+  }
+}

@@ -38,3 +38,14 @@ Cut-outs were made with a segmentation model (rembg, isnet-general-use), then cl
 ## Workflows (all verified in a browser by `scripts/verify.mjs`)
 
 Browse, filter, search, save, product, delivery date and card, add to bag, bag sheet and page, quantity, promo (`WELCOME5`), guest checkout with validation, placement, confirmation, tracking, contact and custom-bouquet forms, newsletter, 404 and unknown-product states. Nothing is a dead end: every empty or error state has a next step. There is no backend: state lives in `localStorage` and every total is computed in the browser, which is correct only for a demo.
+
+## Motion (maximum, and switchable off)
+
+All in `css/motion.css` and `js/motion.js`, only transform, opacity, clip-path and stroke-dashoffset. Under `prefers-reduced-motion` none of it runs: the page is fully drawn, visible and still (the test suite runs both ways).
+
+- **Doodles live:** a line-boil filter (three displacement maps swapped in steps) makes every stroke shimmer like ink; arrows nudge, sparkles twinkle, stars and daisies spin, hearts beat, clocks tick, hooks and sprigs sway, rays and underlines redraw themselves on a loop.
+- **Text lives:** headlines split into letters that spring up with a blur-in then wave forever; letters jump on hover; script words wipe in and sway; handwritten notes type themselves out; numbers count up.
+- **Scroll-driven, no JavaScript:** a progress bar, cut-outs that drift at different speeds, giant words and index images that slide in from the side, step numbers that spin in, the story's yarn line that draws as you scroll, the hero flower that tumbles away.
+- **Ambient:** gradient orbs drifting, hearts and sparkles rising behind the whole page, two ribbons of words running across the home page, every cut-out floating or rocking out of step with its neighbour.
+- **Pointer:** a five-sparkle cursor trail and hero parallax (values travel through one constructable stylesheet rule, never inline styles); a burst of hearts when something goes in the bag; buttons shine, stitch and squash; the header slips away when scrolling down.
+- **First visit:** a short logo intro, once per session, skippable with a click.

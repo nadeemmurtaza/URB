@@ -12,3 +12,14 @@ node scripts/verify.mjs              # links, flows, overflow at 7 widths (needs
 - Tokens: `css/tokens.css`. Products and collections: `js/data.js`. Doodles: `js/doodles.js`.
 
 Logo, cover and product photos come from URB's Pluto store listing (demo use). Replace with originals when supplied.
+
+## Deploy on Cloudflare
+
+Static assets on Cloudflare Workers (same setup as the other sites in this account): `wrangler.jsonc` serves the repo root, `.assetsignore` keeps docs, scripts and git files out, `_headers` sets caching and security headers.
+
+```bash
+npx wrangler login      # once
+npm run deploy          # npx wrangler deploy  ->  https://urb.<your-subdomain>.workers.dev
+```
+
+Or connect the GitHub repo in Cloudflare (Workers & Pages, Create, Import a repository) with build command empty and deploy command `npx wrangler deploy`. For CI, set `CLOUDFLARE_API_TOKEN` (Workers Scripts: Edit) and `CLOUDFLARE_ACCOUNT_ID`.

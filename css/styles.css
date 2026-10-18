@@ -484,3 +484,34 @@ body[data-page="product"] { padding-bottom: 84px; }
 .head .doodle { inset-block-start: 0; inset-inline-end: var(--s-3); }
 .closing .doodle { position: relative; }
 .page-head .doodle { inset-inline-end: var(--s-5); }
+
+/* Svg filter defs, scroll progress, marquee words, story timeline */
+.defs { position: absolute; width: 0; height: 0; }
+.progress { display: none; }
+.marquee { overflow: clip; padding-block: var(--s-3); }
+.marquee__track { display: flex; align-items: center; gap: var(--s-5); width: max-content; }
+.mq { font: 700 clamp(2.6rem, 1.4rem + 6vw, 6.5rem)/1.1 var(--font-display); letter-spacing: -0.03em; white-space: nowrap; }
+.mq--out { color: transparent; -webkit-text-stroke: 2px var(--ink); }
+.mq--script { font-family: var(--font-script); font-weight: 400; color: var(--script); letter-spacing: 0; font-size: 1.15em; }
+.marquee .doodle { position: relative; flex: none; }
+.quote { margin: 0; display: grid; gap: var(--s-1); max-width: 20em; }
+.quote .hand { font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem); }
+.quote cite { font: 700 var(--fs-note) var(--font-note); color: var(--ink-3); font-style: normal; }
+.tl-wrap { position: relative; display: grid; gap: var(--s-8); }
+.tl__spine { display: none; }
+.tl { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-4); align-items: center; }
+.tl__text { display: grid; gap: var(--s-2); justify-items: start; position: relative; }
+.tl__date { display: inline-flex; align-items: center; gap: var(--s-2); }
+.tl__quote { font: 700 clamp(2.1rem, 1.1rem + 4.4vw, 4.6rem)/0.98 var(--font-display); letter-spacing: -0.03em; }
+.tl__note { color: var(--ink-2); max-width: 28em; font-size: var(--fs-lg); line-height: 1.45; }
+.tl__art { display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: end; justify-content: center; position: relative; }
+.tl__art .cut { width: clamp(120px, 30vw, 240px); height: auto; }
+.tl__art .art--soft { width: min(100%, 420px); height: auto; }
+.tl__art .doodle { inset-block-start: 0; inset-inline-end: var(--s-3); }
+@media (min-width: 1024px) {
+  .tl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-8); }
+  .tl:nth-child(even) .tl__text { order: 2; }
+  .tl__spine { display: block; position: absolute; inset-block: 0; inset-inline-start: calc(50% - 20px); width: 40px; height: 100%; fill: none; stroke: var(--script); stroke-width: 4; stroke-linecap: round; opacity: 0.55; overflow: visible; pointer-events: none; }
+  .tl__spine path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+}
+main { overflow-x: clip; }

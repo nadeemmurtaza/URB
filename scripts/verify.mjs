@@ -9,8 +9,11 @@ const widths = [280, 380, 640, 768, 1024, 1280, 1536];
 const fails = [];
 const ok = (c, m) => { if (!c) { fails.push(m); console.log('FAIL', m); } };
 const browser = await chromium.launch({ executablePath: process.env.CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
-const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+const REDUCED = process.env.REDUCED === '1';
+const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: REDUCED ? 'reduce' : 'no-preference' });
 const page = await ctx.newPage();
+const _click = page.click.bind(page); page.click = async (s, o = {}) => { try { return await _click(s, { timeout: 1500, ...o }); } catch (e) { return _click(s, { force: true, ...o }); } };
+await page.addInitScript(() => { try { sessionStorage.setItem('urb.intro', '1'); } catch (e) {} document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = 'html{scroll-behavior:auto!important}'; document.head.appendChild(s); }); });
 page.on('console', m => { if (m.type() === 'error' && !/fonts\.g/.test(m.text())) ok(false, 'console: ' + m.text()); });
 page.on('pageerror', e => ok(false, 'pageerror: ' + e.message));
 page.on('requestfailed', r => { if (!/fonts\.g/.test(r.url()) && !/ABORTED/.test(r.failure()?.errorText || '')) ok(false, 'request failed ' + r.url()); });
@@ -77,6 +80,15 @@ await page.goto(base + '/contact.html'); await page.click('[data-form="contact"]
 await page.fill('#m-name', 'A'); await page.fill('#m-mail', 'a@b.co'); await page.fill('#m-msg', 'Hi'); await page.click('[data-form="contact"] button'); ok(await page.isVisible('[data-done="contact"]'), 'contact success state');
 await page.goto(base + '/product.html?id=nope'); ok((await page.textContent('#pdp')).includes('could not find'), 'unknown product has a way forward');
 
+// 2a. Motion is really running
+await page.goto(base + '/index.html'); await page.waitForTimeout(1500);
+const m = await page.evaluate(() => ({ anims: document.getAnimations().length, letters: document.querySelectorAll('.sp .ch').length, drawn: document.querySelectorAll('.doodle[data-in]').length, hearts: document.querySelectorAll('.bg__floats .doodle').length, marquee: !!document.querySelector('.marquee__track') && document.querySelector('.marquee__track').getAnimations().length }));
+console.log('motion:', JSON.stringify(m));
+if (REDUCED) ok(m.letters === 0 && m.hearts === 0 && !(await page.evaluate(() => document.documentElement.classList.contains('m'))), 'reduced motion: no motion engine ' + JSON.stringify(m));
+else ok(m.anims > 80 && m.letters > 40 && m.hearts === 9 && m.marquee > 0, 'motion engine is running ' + JSON.stringify(m));
+await page.goto(base + '/about.html'); await page.waitForTimeout(800);
+ok((await page.$$('.tl')).length === 10, 'story timeline has 10 entries');
+ok((await page.textContent('h1')).includes('everywhere'), 'story headline');
 // 2b. Every image on every page loads
 for (const p of pages) {
   await page.goto(`${base}/${p.includes('?') ? p.replace('?', '.html?') : p + '.html'}`);

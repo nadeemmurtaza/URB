@@ -62,7 +62,7 @@
     close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
   };
-  var NAV = [['shop.html', 'Bouquets'], ['collection.html?c=stems', 'Stems'], ['collection.html?c=plushies', 'Plushies'], ['collection.html?c=wear', 'Wear'], ['collection.html?c=little', 'Little things'], ['about.html', 'Our story']];
+  var NAV = [['shop.html', 'Bouquets'], ['collection.html?c=stems', 'Stems'], ['collection.html?c=plushies', 'Plushies'], ['collection.html?c=wear', 'Wear'], ['collection.html?c=little', 'Little things'], ['about.html', 'Her story']];
   var MORE = [['contact.html', 'Contact'], ['delivery.html', 'Delivery & care'], ['track.html', 'Track an order'], ['wishlist.html', 'Saved']];
   function chrome() {
     var cur = (location.pathname.split('/').pop() || 'index.html') + (page === 'collection' ? location.search.split('&')[0] : '');
@@ -122,7 +122,7 @@
   /* ---------- Sync counts and any live views ---------- */
   function sync() {
     var c = totals().count, w = getWish().length;
-    $$('[data-count="cart"]').forEach(function (e) { e.textContent = c; e.hidden = !c; });
+    $$('[data-count="cart"]').forEach(function (e) { if (String(c) !== e.textContent && c) { e.setAttribute('data-bump', ''); setTimeout(function () { e.removeAttribute('data-bump'); }, 800); } e.textContent = c; e.hidden = !c; });
     $$('[data-count="wish"]').forEach(function (e) { e.textContent = w; e.hidden = !w; });
     renderCartSheet();
     $$('[data-action="wish"]').forEach(function (b) { var s = getWish().indexOf(b.getAttribute('data-id')) > -1, p = byId(b.getAttribute('data-id')); b.setAttribute('aria-pressed', s); if (p && b.classList.contains('card__save')) b.setAttribute('aria-label', (s ? 'Remove ' : 'Save ') + p.name + (s ? ' from saved' : ' to saved')); });
@@ -331,7 +331,7 @@
   /* ---------- Reveal on scroll: CSS owns the animation, JS only flips a data hook ---------- */
   var io;
   function reveal() {
-    var els = $$('[data-reveal]:not([data-in]), .doodle:not([data-in])');
+    var els = $$('[data-reveal]:not([data-in]), .doodle:not([data-in]), .hand:not([data-in])');
     if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach(function (e) { e.setAttribute('data-in', ''); }); return; }
     io = io || new IntersectionObserver(function (en) { en.forEach(function (x) { if (x.isIntersecting) { x.target.setAttribute('data-in', ''); io.unobserve(x.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
     els.forEach(function (e) { io.observe(e); });
