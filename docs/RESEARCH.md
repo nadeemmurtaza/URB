@@ -47,3 +47,10 @@ Warm, handmade, playful-premium, honest about scarcity. Not a mass-market "send 
 - Product photos are URB's own, taken from the Pluto listing, and are used here as a demo. Replace with originals when available.
 - Lead time for made-to-order pieces and returns policy are not stated anywhere and are not shown.
 - The wordmark font is not identified; the logo image is used as-is. Fredoka (rounded) stands in for headings and Yellowtail echoes the cover script. Confirm the real fonts.
+
+## Instagram (screenshots supplied)
+
+- **URB is wider than bouquets.** Highlights are Orders, Plushies and Cardigans; feed posts cover single stems (corn poppy, Lewisia, iris), keyrings (pink daisy bouquet, coffee mug), amigurumi (a swan, "Mr Snake"), tops and cardigans, scarves and gloves, and gift baskets. The site now has Bouquets (priced, from Pluto) plus Single stems, Plushies, Wear and Little things (made to order, price on request: no prices were visible for them, so none are invented).
+- **Visual language:** photos with hand-lettered overlays (script titles, white chalk arrows and circles, sparkles, hearts, pastel highlighter blocks), a berry-pink parcel box with petal prints, mauve avatar.
+- **Real specs used on the site:** handmade, washable acrylic or cotton yarn, 4-ply, 11 inch stems, making times of 35 min to 12 hrs, poppy colours orange, pink, white and purple.
+- Not used: the "Secret Box" story (licensed cartoon characters), the crochet blanket (labelled AI content), frames where the face or a screenshot overlay dominates.

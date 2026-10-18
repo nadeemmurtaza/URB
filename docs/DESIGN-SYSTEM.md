@@ -1,25 +1,28 @@
 # URB design system
 
-Source of truth: `css/tokens.css` (mirror for tools: `css/tokens.json`). Nothing else holds a colour, size or duration literal.
+Source of truth: `css/tokens.css` (mirror for design tools: `css/tokens.json`). Nothing else holds a colour, size or duration literal.
 
-## What was taken from the four repos
+## Direction: a doodle journal, one continuous page
 
-| Repo | Taken |
-| --- | --- |
-| **ROYA** | Roles-not-colours token model; warm paper/ink pairing; `settle` ease `(0.16,1,0.3,1)`, `panel`, `exit`; seven test widths 280/380/640/768/1024/1280/1536; reduced motion keeps information; rule that CSS lives in stylesheets only (no `style` attribute anywhere); prices as Latin digits in `<bdi dir="ltr">`; 4/8 spacing scale capped at 64; lift 4px, press 0.98, arrive 0.97. |
-| **ZUwithCamera** | Duration ladder (micro 120 · ui 240 · content 560 · cine 900), `[hidden]` guard, no tap flash, 44px+ targets, `touch-action: manipulation`, focus ring discipline. |
-| **MILES** | One-file colour discipline, view-transition page cross-fade, animate only transform and opacity, pause what is off screen. |
-| **yaseenecom** | One-ink logo rule, clear space, minimum size, "never re-colour the mark" discipline. |
+Taken from URB's own Instagram posts, which are photos annotated by hand: handwritten notes, curled arrows, circled labels, sparkles, hearts, stars and rays.
+
+- **One page, no sections.** A single fixed gradient (cream to blush to soft peach) with four blurred colour orbs drifting slowly behind everything (transform only, paused under reduced motion). Sections are only spacing: no background bands, borders or cards. Even the footer is on the same page.
+- **Products are not in boxes.** Bouquets, stems, plushies, wear and keyrings are background-removed cut-outs that sit straight on the page with a soft shadow. Two photos that do not cut cleanly (the lily bouquet, and a few scene photos) are feathered into the page with a radial mask instead of cropped into a rectangle.
+- **Bold type, merged with the product.** The hero headline is up to 10.5rem; the cut-out poppy overlaps the end of the words, with handwritten callouts taken from URB's real post text ("4 big petals", "handmade, washable", "11 inch long stem").
+- **Doodles are drawn, not decorated.** `js/doodles.js` holds 20 hand-drawn SVG shapes (arrows, loops, sparkles, hearts, rays, scribble underlines, yarn, clock, hook, daisy). Markup uses `<i data-doodle="arrow-curl" class="d-m doodle--ink">`; the script swaps in the SVG. Each path draws itself on when it scrolls into view and is fully drawn under reduced motion.
+- **Real numbers from the posts** drive the content: making times (35 min keyring, 2.5 hrs poppy, 3 hrs iris, 12 hrs top), 4-ply acrylic, 11 inch stems, washable.
+- **Product page** notes the first three stems of a bouquet around its cut-out, like the posts do.
 
 ## Tokens
 
-- **Colour (measured from URB's logo and cover):** brand mauve `#AC6579` (logo), olive `#889440` (the "eloved" tag), cream `#F9EFDE` (cover paper, page background), script rose `#C44058` (cover lettering), burgundy `#89424B` (cover stars), gingham taupe `#D5CFCA` / `#B8A79D`. Derived: mauve-deep `#8A4A5C` for buttons and small text (white on it is above 4.5:1; the raw logo mauve is about 4:1, so it is used for large shapes and decoration), olive-deep `#5F6B26`, wine `#4A2530` for dark bands, ink `#36222A`.
-- **Brand pieces reused from the cover:** gingham band (promo bar), grid paper (hero), brush-script accent word (one per page), hand-drawn star. The logo is the real artwork; a cream version is used on the wine footer.
-- **Type:** Fredoka (headings, echoes the rounded logo), Nunito (text), Yellowtail (script accent). Scale ratio 1.25 on phones, 1.333 from 768. Body 16px / 1.6.
-- **Space:** 4 · 8 · 16 · 24 · 32 · 48 · 64 · 96. Gutter 20 / 40 / 56. Section rhythm `clamp(64px, 12vw, 128px)`.
-- **Shape:** radius 4 / 12 / 24 / pill. Image aspect 4:5 everywhere. Tap target 48px.
-- **Geometry:** hero, product, cart, story and footer split on the **golden ratio (1.618 : 1)**; photos sit in a 4:5 frame throughout.
-- **Motion:** reveal = 24px rise + fade over 560ms `settle`, staggered 80ms for the first four children only; hover lift/zoom 560ms; press scale 0.98; sheets rise/slide 560ms. Under `prefers-reduced-motion` all durations and distances become 0 and content is simply visible.
+- **Colour (measured from the logo, cover and posts):** mauve `#AC6579`, deep mauve `#8A4A5C` for buttons, script rose `#C44058`, burgundy `#89424B`, olive `#889440` / `#5F6B26`, parcel-box berry `#5C1331`, cream `#F9EFDE`, ink `#36222A`; background stops `#FCF3E6` / `#F8E4DF` / `#F6DADD` with orbs in mauve, peach, sage and sky.
+- **Type:** Fredoka (bold display, echoes the rounded logo), Caveat (handwritten notes, echoes the posts), Yellowtail (script accent word, echoes the cover), Nunito (text). `--fs-mega` clamp(3.4rem to 10.5rem).
+- **Space:** 4 · 8 · 16 · 24 · 32 · 48 · 64 · 96, gutters 20 / 40 / 56, golden-ratio splits (1.618 : 1) from 1024.
+- **Motion:** ROYA curves, ZU duration ladder, plus `--dur-drift` 28s for the gradient and `--dur-draw` 1100ms for doodles. Reveal = 24px rise and fade; cut-outs lift and tilt on hover; reduced motion removes the movement and keeps everything visible.
+
+## Asset pipeline
+
+Cut-outs were made with a segmentation model (rembg, isnet-general-use), then cleaned: low-alpha ghosts removed, only the main object kept, edges feathered. The corn poppy also uses a colour mask to drop the chalk doodles baked into the original post. Source photos are URB's own (Pluto listing and Instagram) and are used for this demo; replace with originals when available. Faces are cropped out of the garment shots. The crochet blanket post is labelled "AI content" on Instagram and was left out.
 
 ## Laws applied
 

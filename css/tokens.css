@@ -17,9 +17,16 @@
   --gingham-a: #D5CFCA;
   --gingham-b: #B8A79D;
   --gingham-line: rgb(184 167 157 / 0.55);
-  --wine: #4A2530;
+  --wine: #5C1331; /* the berry of the urb parcel box, sampled from the Instagram "Orders" story */
 
   --paper: var(--cream);
+  --bg-top: #FCF3E6;
+  --bg-mid: #F8E4DF;
+  --bg-low: #F6DADD;
+  --orb-mauve: #E4B3C0;
+  --orb-peach: #F7C9A8;
+  --orb-sage: #D5DDB4;
+  --orb-sky: #CFD9EE;
   --paper-glass: rgb(249 239 222 / 0.92);
   --paper-sunk: #EFE3CF;
   --card: #FFFBF3;
@@ -30,6 +37,7 @@
   --line: rgb(var(--line-rgb) / 0.14);
   --line-strong: rgb(var(--line-rgb) / 0.32);
   --grid-line: rgb(184 167 157 / 0.28);
+  --veil: rgb(252 243 230 / 0.62);
   --scrim: rgb(54 34 42 / 0.5);
 
   --action: var(--mauve-deep);
@@ -43,9 +51,10 @@
   --ok: var(--olive-deep);
   --on-ink: var(--cream);
 
-  /* Type: Fredoka (display, echoes the rounded logo), Nunito (text), Yellowtail (script accent, echoes the cover lettering). Scale 1.25 on phones, 1.333 from 768. */
+  /* Type: Fredoka (bold display, echoes the rounded logo), Nunito (text), Caveat (handwritten notes, echoes the feed doodles), Yellowtail (script accent). Scale 1.25 on phones, 1.333 from 768. */
   --font-display: 'Fredoka', 'Nunito', system-ui, sans-serif;
   --font-text: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-note: 'Caveat', 'Segoe Print', 'Bradley Hand', cursive;
   --font-script: 'Yellowtail', 'Brush Script MT', cursive;
   --fs-xs: 0.75rem;
   --fs-sm: 0.875rem;
@@ -53,6 +62,8 @@
   --fs-lg: 1.25rem;
   --fs-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --fs-2xl: clamp(2rem, 1.5rem + 2.2vw, 3rem);
+  --fs-mega: clamp(3.4rem, 1.4rem + 14vw, 10.5rem);
+  --fs-note: clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
   --fs-3xl: clamp(2.5rem, 1.7rem + 3.8vw, 4.5rem);
   --lh-tight: 1.05;
   --lh-snug: 1.25;
@@ -81,6 +92,7 @@
   --r-lg: 24px;
   --r-pill: 999px;
   --tap: 48px;
+  --shadow-cut: 0 14px 18px rgb(54 34 42 / 0.22);
   --shadow-1: 0 1px 2px rgb(54 34 42 / 0.06), 0 4px 12px rgb(54 34 42 / 0.08);
   --shadow-2: 0 8px 32px rgb(54 34 42 / 0.16);
 
@@ -93,11 +105,14 @@
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-panel: cubic-bezier(0.77, 0, 0.18, 1);
+  --dur-drift: 28s;
+  --dur-draw: 1100ms;
   --lift: 4px;
   --press: 0.98;
   --arrive: 0.97;
   --travel: 24px;
 
+  --doodle: 2.5px;
   --grid-size: 24px;
   --gingham: 16px;
 
@@ -109,5 +124,5 @@
 @media (min-width: 768px) { :root { --gutter: 40px; } }
 @media (min-width: 1024px) { :root { --gutter: 56px; } }
 @media (prefers-reduced-motion: reduce) {
-  :root { --dur-micro: 0ms; --dur-ui: 0ms; --dur-content: 0ms; --dur-cine: 0ms; --travel: 0px; --lift: 0px; }
+  :root { --dur-micro: 0ms; --dur-ui: 0ms; --dur-content: 0ms; --dur-cine: 0ms; --dur-draw: 0ms; --travel: 0px; --lift: 0px; }
 }

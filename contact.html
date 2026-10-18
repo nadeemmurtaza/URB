@@ -9,13 +9,13 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&family=Yellowtail&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&family=Yellowtail&display=swap">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body id="top" data-page="contact">
 <main id="main">
-<div class="container"><div class="page-head"><p class="eyebrow">Contact</p><h1 class="h1">Say hello</h1></div>
+<div class="container"><div class="page-head"><p class="hand hand--rose">contact</p><h1 class="h1">Say <span class="script">hello</span></h1><i data-doodle="sparkle" class="d-s doodle--rose"></i></div>
 <div class="cols2"><div class="stack">
 <form class="form-card" data-form="contact" novalidate><h2>Send a message</h2>
 <div class="field"><label for="m-name">Name</label><input id="m-name" name="name" required autocomplete="name"><p class="field__error" data-for="name" hidden>Please add your name.</p></div>
@@ -28,7 +28,7 @@
 <a href="https://www.tiktok.com/@shop.urb" target="_blank" rel="noopener">TikTok @shop.urb<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 <a href="https://www.facebook.com/share/15Buz3M4xc/" target="_blank" rel="noopener">Facebook<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 <a href="https://plutopakistan.com/stores/urb-394" target="_blank" rel="noopener">URB on Pluto<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-<div id="custom"><form class="form-card" data-form="custom" novalidate><h2>Custom bouquet</h2><p class="note">Tell us the occasion, the flowers and the colours. We will propose a design and a price.</p>
+<div id="custom"><figure class="parcel parcel--wide"><img class="art art--soft" src="assets/photos/accessories.webp" alt="A custom order: red scarf with a bow, paw gloves and a flower garland" width="1000" height="1250" loading="lazy"></figure><form class="form-card" data-form="custom" novalidate><h2>Custom bouquet</h2><p class="note">Tell us the occasion, the flowers and the colours. We will propose a design and a price.</p>
 <div class="field"><label for="x-name">Name</label><input id="x-name" name="name" required autocomplete="name"><p class="field__error" data-for="name" hidden>Please add your name.</p></div>
 <div class="field"><label for="x-occ">Occasion</label><select id="x-occ" name="occ" required><option value="">Choose</option><option>Love</option><option>Anniversary</option><option>Birthday</option><option>Thank you</option><option>Get well</option><option>Other</option></select><p class="field__error" data-for="occ" hidden>Choose an occasion.</p></div>
 <div class="field"><label for="x-brief">Colours, flowers, budget</label><textarea id="x-brief" name="brief" rows="3" required></textarea><p class="field__error" data-for="brief" hidden>Tell us a little.</p></div>
@@ -36,6 +36,7 @@
 <div class="done-msg" data-done="custom" tabindex="-1" hidden><h2 class="h2">Request received</h2><p>We will send a design and a price shortly.</p><a class="btn btn--line" href="shop.html">Browse ready-made bouquets</a></div></div></div></div></div>
 </main>
 <script src="js/data.js"></script>
+<script src="js/doodles.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

@@ -17,9 +17,18 @@
   var page = document.body.getAttribute('data-page');
   var params = new URLSearchParams(location.search);
 
-  /* ---------- Photos: URB's own product photos; "close" is a crop of the same file ---------- */
+  /* ---------- Pictures: cut-outs sit straight on the page; a few photos are feathered into it ---------- */
   function art(p, view, eager) {
-    return '<img class="art' + (view === 'close' ? ' art--zoom' : '') + '" src="' + p.img + '" alt="' + esc(p.name) + ', crocheted bouquet" width="900" height="1125" decoding="async"' + (eager ? '' : ' loading="lazy"') + '>';
+    var photo = view === 'photo', src = photo ? p.photo : p.img, soft = photo || p.soft;
+    return '<img class="art' + (soft ? ' art--soft' : '') + '" src="' + src + '" alt="' + esc(p.name) + ', crocheted by URB" width="800" height="800" decoding="async"' + (eager ? '' : ' loading="lazy"') + '>';
+  }
+  function itemArt(it) { return '<img class="art' + (it.soft ? ' art--soft' : '') + '" src="' + it.img + '" alt="' + esc(it.name) + ', crocheted by URB" width="800" height="800" loading="lazy" decoding="async">'; }
+  function DOOD(n, c) { return window.URB_DOODLES(n, c); }
+  function doodles(root) {
+    $$('[data-doodle]', root || document).forEach(function (el) {
+      var t = document.createElement('template'); t.innerHTML = DOOD(el.getAttribute('data-doodle'), el.className);
+      if (t.content.firstChild) el.replaceWith(t.content.firstChild);
+    });
   }
 
   /* ---------- Cart maths (display only: this is a demo) ---------- */
@@ -53,13 +62,13 @@
     close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
   };
-  var STAR = '<svg class="star" viewBox="0 0 72 72" aria-hidden="true"><path d="M36 6l7 22 23 2-18 14 6 22-18-13-19 12 7-22L5 29l23-1z"/></svg>';
-  var NAV = [['shop.html', 'Shop'], ['about.html', 'Our story'], ['delivery.html', 'Delivery & care'], ['track.html', 'Track order'], ['contact.html', 'Contact']];
+  var NAV = [['shop.html', 'Bouquets'], ['collection.html?c=stems', 'Stems'], ['collection.html?c=plushies', 'Plushies'], ['collection.html?c=wear', 'Wear'], ['collection.html?c=little', 'Little things'], ['about.html', 'Our story']];
+  var MORE = [['contact.html', 'Contact'], ['delivery.html', 'Delivery & care'], ['track.html', 'Track an order'], ['wishlist.html', 'Saved']];
   function chrome() {
-    var cur = location.pathname.split('/').pop() || 'index.html';
+    var cur = (location.pathname.split('/').pop() || 'index.html') + (page === 'collection' ? location.search.split('&')[0] : '');
     var nav = NAV.map(function (n) { return '<a href="' + n[0] + '"' + (cur === n[0] ? ' aria-current="page"' : '') + '>' + n[1] + '</a>'; }).join('');
     var h = '<a class="skip" href="#main">Skip to content</a>' +
-      '<div class="promo-bar gingham"><span>Handmade crochet bouquets \u00B7 they never wilt</span></div><header class="header"><div class="header__in container">' +
+      '<header class="header"><div class="header__in container">' +
       '<button class="icon-btn header__menu" data-action="open-menu" aria-label="Open menu">' + icon.menu + '</button>' +
       '<a class="logo" href="index.html" aria-label="URB home"><img class="logo__img" src="assets/logo.png" alt="URB" width="640" height="273"></a>' +
       '<nav class="header__nav" aria-label="Main">' + nav + '</nav>' +
@@ -68,19 +77,20 @@
       '<a class="icon-btn header__wish" href="wishlist.html" aria-label="Saved bouquets">' + icon.heart + '<span class="badge" data-count="wish" hidden>0</span></a>' +
       '<button class="icon-btn" data-action="open-cart" aria-label="Open bag">' + icon.bag + '<span class="badge" data-count="cart" hidden>0</span></button>' +
       '</div></div></header>';
-    document.body.insertAdjacentHTML('afterbegin', h);
+    document.body.insertAdjacentHTML('afterbegin', '<div class="bg" aria-hidden="true"><span class="bg__orb bg__orb--a"></span><span class="bg__orb bg__orb--b"></span><span class="bg__orb bg__orb--c"></span><span class="bg__orb bg__orb--d"></span></div>' + h);
     var f = '<footer class="footer"><div class="container footer__grid">' +
-      '<div class="footer__brand"><a class="logo logo--on-dark" href="index.html" aria-label="URB home"><img class="logo__img" src="assets/logo-cream.png" alt="URB" width="640" height="273"></a><p>ur beloved. Handmade crochet bouquets that never wilt.</p>' +
-      '<form class="newsletter" data-form="newsletter" novalidate><label class="sr" for="nl-email">Email address</label><input id="nl-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required><button class="btn btn--light" type="submit">Join</button><p class="field__error" data-error hidden></p></form></div>' +
-      '<div><h2 class="eyebrow">Shop</h2><ul class="list"><li><a href="shop.html">All bouquets</a></li><li><a href="shop.html?cat=roses">Roses</a></li><li><a href="shop.html?cat=lilies">Lilies</a></li><li><a href="shop.html?cat=pastel">Pastel</a></li><li><a href="shop.html?cat=under10">Under Rs 10,000</a></li></ul></div>' +
+      '<div class="footer__brand"><a class="logo logo--on-dark" href="index.html" aria-label="URB home"><img class="logo__img" src="assets/logo.png" alt="URB" width="640" height="273"></a><p>ur beloved. Handmade crochet bouquets that never wilt.</p>' +
+      '<form class="newsletter" data-form="newsletter" novalidate><label class="sr" for="nl-email">Email address</label><input id="nl-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required><button class="btn btn--ink" type="submit">Join</button><p class="field__error" data-error hidden></p></form></div>' +
+      '<div><h2 class="eyebrow">Shop</h2><ul class="list"><li><a href="shop.html">Bouquets</a></li><li><a href="collection.html?c=stems">Single stems</a></li><li><a href="collection.html?c=plushies">Plushies</a></li><li><a href="collection.html?c=wear">Wear</a></li><li><a href="collection.html?c=little">Little things</a></li><li><a href="shop.html?cat=under10">Bouquets under Rs 10,000</a></li></ul></div>' +
       '<div><h2 class="eyebrow">Help</h2><ul class="list"><li><a href="delivery.html">Delivery & care</a></li><li><a href="track.html">Track an order</a></li><li><a href="contact.html">Contact</a></li><li><a href="contact.html#custom">Custom bouquet</a></li><li><a href="wishlist.html">Saved bouquets</a></li></ul></div>' +
       '<div><h2 class="eyebrow">Follow</h2><ul class="list"><li><a href="' + D.brand.instagram + '" target="_blank" rel="noopener">Instagram</a></li><li><a href="' + D.brand.tiktok + '" target="_blank" rel="noopener">TikTok</a></li><li><a href="' + D.brand.facebook + '" target="_blank" rel="noopener">Facebook</a></li><li><a href="' + D.brand.pluto + '" target="_blank" rel="noopener">Also on Pluto</a></li></ul></div>' +
       '</div><div class="container footer__base"><p>© 2026 URB. A design demonstration: no real orders are taken.</p><a href="#top">Back to top</a></div></footer>';
     document.body.insertAdjacentHTML('beforeend', f);
     document.body.insertAdjacentHTML('beforeend',
-      '<dialog class="sheet sheet--menu" id="dlg-menu" aria-label="Menu"><div class="sheet__head"><a class="logo" href="index.html" aria-label="URB home"><img class="logo__img" src="assets/logo.png" alt="URB" width="640" height="273"></a><button class="icon-btn" data-action="close" aria-label="Close menu">' + icon.close + '</button></div><nav class="menu" aria-label="Mobile">' + [['index.html', 'Home']].concat(NAV).concat([['wishlist.html', 'Saved']]).map(function (n) { return '<a href="' + n[0] + '">' + n[1] + '</a>'; }).join('') + '</nav></dialog>' +
+      '<dialog class="sheet sheet--menu" id="dlg-menu" aria-label="Menu"><div class="sheet__head"><a class="logo" href="index.html" aria-label="URB home"><img class="logo__img" src="assets/logo.png" alt="URB" width="640" height="273"></a><button class="icon-btn" data-action="close" aria-label="Close menu">' + icon.close + '</button></div><nav class="menu" aria-label="Mobile">' + [['index.html', 'Home']].concat(NAV).concat(MORE).map(function (n) { return '<a href="' + n[0] + '">' + n[1] + '</a>'; }).join('') + '</nav></dialog>' +
       '<dialog class="sheet sheet--search" id="dlg-search" aria-label="Search"><div class="sheet__head"><label class="sr" for="q">Search bouquets</label><input id="q" class="search__input" type="search" placeholder="Search by name or flower" autocomplete="off"><button class="icon-btn" data-action="close" aria-label="Close search">' + icon.close + '</button></div><div class="search__out" id="search-out" aria-live="polite"></div></dialog>' +
       '<dialog class="sheet sheet--cart" id="dlg-cart" aria-label="Your bag"><div class="sheet__head"><h2 class="sheet__title">Your bag</h2><button class="icon-btn" data-action="close" aria-label="Close bag">' + icon.close + '</button></div><div class="sheet__body" id="cart-body"></div></dialog>' +
+      '<dialog class="sheet sheet--peek" id="dlg-peek" aria-label="Piece details"><div class="sheet__head"><span class="eyebrow" id="peek-eyebrow"></span><button class="icon-btn" data-action="close" aria-label="Close">' + icon.close + '</button></div><div class="peek" id="peek"></div></dialog>' +
       '<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>');
   }
   var toastT;
@@ -88,7 +98,7 @@
 
   function card(p, i) {
     var saved = getWish().indexOf(p.id) > -1;
-    return '<article class="card" data-reveal><a class="card__media" href="product.html?id=' + p.id + '" aria-label="' + esc(p.name) + '">' + art(p) + (p.was ? '<span class="tag tag--sale">−10%</span>' : '') + (p.stock === 1 ? '<span class="tag tag--low">Last one</span>' : '') + '</a>' +
+    return '<article class="card" data-reveal><a class="card__media" href="product.html?id=' + p.id + '" aria-label="' + esc(p.name) + '">' + art(p) + (p.was ? '<span class="tag">−10%</span>' : '') + (p.stock === 1 ? '<span class="tag tag--low">last one!</span>' : '') + '</a>' +
       '<button class="card__save icon-btn" data-action="wish" data-id="' + p.id + '" aria-pressed="' + saved + '" aria-label="' + (saved ? 'Remove ' : 'Save ') + esc(p.name) + (saved ? ' from saved' : ' to saved') + '">' + icon.heart + '</button>' +
       '<div class="card__body"><h3 class="card__name"><a href="product.html?id=' + p.id + '">' + esc(p.name) + '</a></h3><p class="price"><bdi dir="ltr"><span class="price__now">' + fmt(p.price) + '</span>' + (p.was ? ' <s class="price__was">' + fmt(p.was) + '</s>' : '') + '</bdi></p>' +
       '<button class="btn btn--line btn--block" data-action="add" data-id="' + p.id + '">Add to bag</button></div></article>';
@@ -130,10 +140,22 @@
   }
 
   /* ---------- Pages ---------- */
+  function mountIndex() {
+    var P = function (id) { return byId(id); };
+    var rows = [
+      { href: 'shop.html', w: 'Bouquets', sub: '20 designs, from ' + fmt(2650), img: P('the-love').img, alt: 'The Love Bouquet' },
+      { href: 'collection.html?c=stems', w: 'Single stems', sub: '11 inch long, never wilt', img: D.collections[0].items[0].img, alt: 'Corn poppy' },
+      { href: 'collection.html?c=plushies', w: 'Plushies', sub: 'soft and huggable', img: D.collections[1].items[0].img, alt: 'Chonky cat plushie' },
+      { href: 'collection.html?c=wear', w: 'Wear', sub: 'cardigans and tops', img: D.collections[2].items[0].img, alt: 'Patchwork cardigan' },
+      { href: 'collection.html?c=little', w: 'Little things', sub: 'keyrings, swans, gifts', img: D.collections[3].items[1].img, alt: 'Pink daisy bouquet keyring' }
+    ];
+    $('#idx').innerHTML = rows.map(function (r, i) { return '<a class="index__row" data-reveal href="' + r.href + '"><span class="index__n">0' + (i + 1) + '</span><span class="index__w">' + r.w + '<span class="index__sub">' + r.sub + '</span></span><img class="index__img" src="' + r.img + '" alt="' + esc(r.alt) + '" width="400" height="400" loading="lazy"><svg class="index__wave" viewBox="0 0 2160 12" preserveAspectRatio="xMinYMid slice" aria-hidden="true"><path pathLength="1" d="M0 6 C9 0 27 12 36 6 C45 0 63 12 72 6 C81 0 99 12 108 6 C117 0 135 12 144 6 C153 0 171 12 180 6 C189 0 207 12 216 6 C225 0 243 12 252 6 C261 0 279 12 288 6 C297 0 315 12 324 6 C333 0 351 12 360 6 C369 0 387 12 396 6 C405 0 423 12 432 6 C441 0 459 12 468 6 C477 0 495 12 504 6 C513 0 531 12 540 6 C549 0 567 12 576 6 C585 0 603 12 612 6 C621 0 639 12 648 6 C657 0 675 12 684 6 C693 0 711 12 720 6 C729 0 747 12 756 6 C765 0 783 12 792 6 C801 0 819 12 828 6 C837 0 855 12 864 6 C873 0 891 12 900 6 C909 0 927 12 936 6 C945 0 963 12 972 6 C981 0 999 12 1008 6 C1017 0 1035 12 1044 6 C1053 0 1071 12 1080 6 C1089 0 1107 12 1116 6 C1125 0 1143 12 1152 6 C1161 0 1179 12 1188 6 C1197 0 1215 12 1224 6 C1233 0 1251 12 1260 6 C1269 0 1287 12 1296 6 C1305 0 1323 12 1332 6 C1341 0 1359 12 1368 6 C1377 0 1395 12 1404 6 C1413 0 1431 12 1440 6 C1449 0 1467 12 1476 6 C1485 0 1503 12 1512 6 C1521 0 1539 12 1548 6 C1557 0 1575 12 1584 6 C1593 0 1611 12 1620 6 C1629 0 1647 12 1656 6 C1665 0 1683 12 1692 6 C1701 0 1719 12 1728 6 C1737 0 1755 12 1764 6 C1773 0 1791 12 1800 6 C1809 0 1827 12 1836 6 C1845 0 1863 12 1872 6 C1881 0 1899 12 1908 6 C1917 0 1935 12 1944 6 C1953 0 1971 12 1980 6 C1989 0 2007 12 2016 6 C2025 0 2043 12 2052 6 C2061 0 2079 12 2088 6 C2097 0 2115 12 2124 6 C2133 0 2151 12 2160 6"/></svg></a>'; }).join('');
+  }
   function mountHome() {
-    $('#feat').innerHTML = PRODUCTS.filter(function (p) { return ['white-muse', 'pink-whimsy', 'peony-grace', 'rose-amour'].indexOf(p.id) > -1; }).map(card).join('');
-    $('#occ').innerHTML = D.occasions.map(function (o, i) { return '<a class="occ" data-reveal href="shop.html?occ=' + o.id + '"><span class="occ__n">0' + (i + 1) + '</span><span class="occ__l">' + o.label + '</span><span class="occ__a">' + icon.arrow + '</span></a>'; }).join('');
-    $('#hero-art').innerHTML = art(byId('rose-amour'), 'full', true) + STAR;
+    mountIndex();
+    var P = function (id) { return byId(id); };
+    $('#feat').innerHTML = ['white-muse', 'velvet-sun', 'blue-hour', 'forget-me-not'].map(P).map(card).join('');
+    $('#occ').innerHTML = D.occasions.map(function (o) { return '<a class="occ" data-reveal href="shop.html?occ=' + o.id + '">' + o.label + '</a>'; }).join('');
   }
   function mountShop() {
     var st = { cat: params.get('cat') || 'all', occ: params.get('occ') || '', q: params.get('q') || '', sort: 'featured' };
@@ -156,17 +178,28 @@
     $('#reset').addEventListener('click', function () { st = { cat: 'all', occ: '', q: '', sort: 'featured' }; $('#occ-sel').value = ''; $('#sort').value = 'featured'; $('#shop-q').value = ''; draw(); });
     draw();
   }
+  function peekHTML(c, it) {
+    return '<div class="peek__img">' + itemArt(it).replace(' loading="lazy"', '') + '</div><div class="peek__body"><h2 class="h1">' + esc(it.name) + '</h2><p class="lede">' + esc(it.note) + '</p><ul class="peek__facts">' + (it.facts || []).map(function (f) { return '<li><i data-doodle="check" class="d-xs"></i>' + esc(f) + '</li>'; }).join('') + '</ul>' + (it.colors && it.colors.length ? '<p class="hand hand--rose">available colours: ' + it.colors.join(', ') + '</p>' : '') + '<p class="note">Made to order. Price on request.</p><a class="btn btn--ink" href="contact.html?c=' + c.id + '&item=' + encodeURIComponent(it.name) + '#custom">Ask about this piece</a><a class="btn btn--text" href="collection.html?c=' + c.id + '">more in ' + esc(c.label).toLowerCase() + '</a></div>';
+  }
+  function mountCollection() {
+    var c = D.collections.filter(function (x) { return x.id === params.get('c'); })[0], root = $('#coll');
+    if (!c) { root.innerHTML = empty('We could not find that collection', 'Choose one of our crafts instead.', 'index.html#crafts', 'See all crafts'); return; }
+    document.title = c.label + ' \u00B7 URB';
+    $('#coll-eyebrow').textContent = c.label; $('#coll-title').textContent = c.title; $('#coll-lede').textContent = c.lede;
+    $('#coll-tabs').innerHTML = [['shop.html', 'Bouquets', false]].concat(D.collections.map(function (x) { return ['collection.html?c=' + x.id, x.label, x.id === c.id]; })).map(function (t) { return '<a class="chip" href="' + t[0] + '"' + (t[2] ? ' aria-current="page" aria-pressed="true"' : ' aria-pressed="false"') + '>' + t[1] + '</a>'; }).join('');
+    root.innerHTML = c.items.map(function (it, i) { return '<article class="card" data-reveal><button class="card__media card__media--btn" data-action="peek" data-c="' + c.id + '" data-i="' + i + '" aria-label="View ' + esc(it.name) + '">' + itemArt(it) + '</button><div class="card__body"><h3 class="card__name">' + esc(it.name) + '</h3><p class="hand hand--olive">' + esc((it.facts || [''])[0]) + '</p><p class="note">Made to order \u00B7 price on request</p><a class="btn btn--line btn--block" href="contact.html?c=' + c.id + '&item=' + encodeURIComponent(it.name) + '#custom">Enquire</a></div></article>'; }).join('');
+  }
   function mountProduct() {
     var p = byId(params.get('id')), root = $('#pdp');
     if (!p) { $('.sticky-buy').hidden = true; $('.related').hidden = true; root.innerHTML = empty('We could not find that bouquet', 'It may have sold out or moved. The rest of the garden is open.', 'shop.html', 'Browse bouquets'); document.title = 'Not found · URB'; return; }
     document.title = p.name + ' · URB';
-    var min = new Date(Date.now() + 864e5).toISOString().slice(0, 10), views = ['full', 'close'];
+    var min = new Date(Date.now() + 864e5).toISOString().slice(0, 10), views = ['full', 'photo'];
     var saved = getWish().indexOf(p.id) > -1;
-    root.innerHTML = '<div class="pdp__gallery"><div class="pdp__main" id="pdp-main">' + art(p, 'full') + '</div><div class="pdp__thumbs" role="group" aria-label="Views">' + views.map(function (v, i) { return '<button class="thumb" data-view="' + v + '" aria-pressed="' + (i === 0) + '" aria-label="' + (v === 'full' ? 'Full bouquet' : 'Close-up') + '">' + art(p, v) + '</button>'; }).join('') + '</div></div>' +
+    root.innerHTML = '<div class="pdp__gallery"><div class="pdp__main" id="pdp-main">' + art(p, 'full', true) + '<div class="pdp__notes" aria-hidden="true">' + p.inside.slice(0, 3).map(function (t, i) { return '<p class="pdp__note pdp__note--' + (i + 1) + '"><span class="hand' + (i === 2 ? ' hand--olive' : '') + '">' + esc(t) + '</span><i data-doodle="' + ['arrow-curl', 'arrow-curl', 'arrow-up'][i] + '" class="d-s' + (i === 1 ? ' is-flip' : '') + ' doodle--ink"></i></p>'; }).join('') + '</div></div><div class="pdp__thumbs" role="group" aria-label="Views">' + views.map(function (v, i) { return '<button class="thumb" data-view="' + v + '" aria-pressed="' + (i === 0) + '" aria-label="' + (v === 'full' ? 'Cut-out view' : 'Original photo') + '">' + art(p, v) + '</button>'; }).join('') + '</div></div>' +
       '<div class="pdp__info"><nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="shop.html">Shop</a><span aria-hidden="true">/</span><span aria-current="page">' + esc(p.name) + '</span></nav>' +
       '<h1 class="pdp__title">' + esc(p.name) + '</h1><p class="price price--lg"><bdi dir="ltr"><span class="price__now">' + fmt(p.price) + '</span>' + (p.was ? ' <s class="price__was">' + fmt(p.was) + '</s> <span class="tag tag--inline">Save ' + fmt(p.was - p.price) + '</span>' : '') + '</bdi></p>' +
       '<p class="lede">' + esc(p.line) + '</p><p class="stock" data-low="' + (p.stock <= 3) + '">' + stockNote(p) + '</p>' +
-      '<h2 class="eyebrow">What is inside</h2><ul class="inside">' + p.inside.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>' +
+      '<h2 class="hand">what is inside</h2><ul class="inside">' + p.inside.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>' +
       '<form class="buy" id="buy" novalidate><div class="field"><label for="date">Delivery date</label><input id="date" name="date" type="date" min="' + min + '" required><p class="field__hint">Pick any day from tomorrow.</p><p class="field__error" data-error hidden></p></div>' +
       '<div class="field"><label for="msg">Card message <span class="opt">optional</span></label><textarea id="msg" name="msg" rows="3" maxlength="160" placeholder="Written by hand, 160 characters"></textarea></div>' +
       '<div class="buy__row"><div class="qty qty--lg" role="group" aria-label="Quantity"><button type="button" class="qty__b" data-action="pdp-dec" aria-label="Decrease">−</button><output class="qty__n" id="pq">1</output><button type="button" class="qty__b" data-action="pdp-inc" aria-label="Increase">+</button></div><button class="btn btn--ink btn--grow" type="submit" data-intent="add">Add to bag</button></div>' +
@@ -175,7 +208,7 @@
       '<div class="acc"><details><summary>Delivery</summary><p>Delivery is <bdi dir="ltr">' + fmt(p.fee) + '</bdi> for this bouquet. Each bouquet is wrapped and ribboned, then packed to arrive upright. <a href="delivery.html">Full delivery details</a>.</p></details><details><summary>Care</summary><p>Crochet never wilts and needs no water. Keep it dry and out of direct sun, and dust it with a soft brush. <a href="delivery.html#care">Care guide</a>.</p></details><details><summary>Made by hand</summary><p>Each stem is crocheted by hand, so small differences in shape or yarn shade are part of the piece. Ask us about colour changes on the <a href="contact.html#custom">custom bouquet form</a>.</p></details></div></div>';
     var qty = 1;
     root.addEventListener('click', function (e) {
-      var v = e.target.closest('[data-view]'); if (v) { $('#pdp-main').innerHTML = art(p, v.getAttribute('data-view')); $$('.thumb').forEach(function (t) { t.setAttribute('aria-pressed', t === v); }); }
+      var v = e.target.closest('[data-view]'); if (v) { var nt = $('.pdp__notes', $('#pdp-main')); $('#pdp-main').innerHTML = art(p, v.getAttribute('data-view'), true) + (nt ? nt.outerHTML : ''); $('.pdp__notes', $('#pdp-main')).hidden = v.getAttribute('data-view') === 'photo'; $$('.thumb').forEach(function (t) { t.setAttribute('aria-pressed', t === v); }); }
       var a = e.target.closest('[data-action]'); if (!a) return;
       if (a.dataset.action === 'pdp-inc') qty = Math.min(p.stock, qty + 1);
       if (a.dataset.action === 'pdp-dec') qty = Math.max(1, qty - 1);
@@ -247,7 +280,7 @@
   function mountConfirmed() {
     var o = findOrder(params.get('o')), r = $('#done');
     if (!o) { r.innerHTML = empty('We could not find that order', 'Orders live in this browser. Check the number, or track it by order number.', 'track.html', 'Track an order'); return; }
-    r.innerHTML = '<p class="eyebrow">Order placed</p><h1 class="h1">Thank you, ' + esc(o.name.split(' ')[0]) + '.</h1><p class="lede">Your order number is <strong>' + o.id + '</strong>. We will deliver your bouquet on ' + esc(o.date) + ' and message you when it leaves.</p><div class="panel"><ul class="lines lines--ro">' + o.items.map(function (i) { var p = byId(i.id); return '<li class="line"><span class="line__img">' + (p ? art(p) : '') + '</span><div class="line__main"><p class="line__name">' + esc(i.name) + '</p><p class="line__meta">Qty ' + i.qty + '</p></div><bdi dir="ltr" class="line__total">' + fmt(i.price * i.qty) + '</bdi></li>'; }).join('') + '</ul><dl class="sum"><div><dt>Delivery</dt><dd><bdi dir="ltr">' + fmt(o.fee) + '</bdi></dd></div><div class="sum__total"><dt>Total</dt><dd><bdi dir="ltr">' + fmt(o.total) + '</bdi></dd></div></dl><p class="note">Payment: ' + ({ cod: 'Cash on delivery', bank: 'Bank transfer (details sent by message)', card: 'Card (link sent by message)' }[o.pay] || o.pay) + '</p></div><div class="actions"><a class="btn btn--ink" href="track.html?o=' + o.id + '">Track this order</a><a class="btn btn--line" href="shop.html">Keep browsing</a></div>';
+    r.innerHTML = '<p class="eyebrow">Order placed</p><h1 class="h1">Thank you, ' + esc(o.name.split(' ')[0]) + '.</h1><p class="lede">Your order number is <strong>' + o.id + '</strong>. We will deliver your bouquet on ' + esc(o.date) + ' and message you when it leaves.</p><div class="panel"><ul class="lines lines--ro">' + o.items.map(function (i) { var p = byId(i.id); return '<li class="line"><span class="line__img">' + (p ? art(p) : '') + '</span><div class="line__main"><p class="line__name">' + esc(i.name) + '</p><p class="line__meta">Qty ' + i.qty + '</p></div><bdi dir="ltr" class="line__total">' + fmt(i.price * i.qty) + '</bdi></li>'; }).join('') + '</ul><dl class="sum"><div><dt>Delivery</dt><dd><bdi dir="ltr">' + fmt(o.fee) + '</bdi></dd></div><div class="sum__total"><dt>Total</dt><dd><bdi dir="ltr">' + fmt(o.total) + '</bdi></dd></div></dl><p class="note">Payment: ' + ({ cod: 'Cash on delivery', bank: 'Bank transfer (details sent by message)', card: 'Card (link sent by message)' }[o.pay] || o.pay) + '</p></div><div class="parcel"><img class="art art--soft" src="' + D.brand.box + '" alt="The URB parcel box with its pink handle" width="1000" height="1250" loading="lazy"><p class="note">Your order arrives in the berry-pink urb box.</p></div><div class="actions"><a class="btn btn--ink" href="track.html?o=' + o.id + '">Track this order</a><a class="btn btn--line" href="shop.html">Keep browsing</a></div>';
   }
   function mountTrack() {
     var form = $('#track'), out = $('#track-out'), steps = ['Order received', 'Bouquet checked', 'Wrapped and ribboned', 'Out for delivery', 'Delivered'];
@@ -274,6 +307,7 @@
     var id = a.getAttribute('data-id'), act = a.getAttribute('data-action');
     if (act === 'add') addToCart(id);
     if (act === 'wish') { var w = getWish().slice(), i = w.indexOf(id); if (i > -1) { w.splice(i, 1); toast('Removed from saved.'); } else { w.push(id); toast('Saved. Find it under the heart.'); } setWish(w); }
+    if (act === 'peek') { var cc = D.collections.filter(function (x) { return x.id === a.getAttribute('data-c'); })[0]; $('#peek').innerHTML = peekHTML(cc, cc.items[+a.getAttribute('data-i')]); $('#peek-eyebrow').textContent = cc.label; openDlg('dlg-peek'); }
     if (act === 'open-cart') openDlg('dlg-cart');
     if (act === 'open-search') openDlg('dlg-search');
     if (act === 'open-menu') openDlg('dlg-menu');
@@ -297,7 +331,7 @@
   /* ---------- Reveal on scroll: CSS owns the animation, JS only flips a data hook ---------- */
   var io;
   function reveal() {
-    var els = $$('[data-reveal]:not([data-in])');
+    var els = $$('[data-reveal]:not([data-in]), .doodle:not([data-in])');
     if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach(function (e) { e.setAttribute('data-in', ''); }); return; }
     io = io || new IntersectionObserver(function (en) { en.forEach(function (x) { if (x.isIntersecting) { x.target.setAttribute('data-in', ''); io.unobserve(x.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
     els.forEach(function (e) { io.observe(e); });
@@ -305,7 +339,12 @@
 
   chrome();
   sync();
+  doodles();
+  var raf; new MutationObserver(function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(function () { doodles(); reveal(); }); }).observe(document.body, { childList: true, subtree: true });
+  if (page === 'collection') mountCollection();
+  if (page === 'contact' && params.get('item')) { $('#x-brief').value = 'I would like to ask about: ' + params.get('item') + '.\nColours, size and budget: '; var oc = $('#x-occ'); if (oc) oc.value = 'Other'; if (location.hash === '#custom') setTimeout(function () { $('#x-brief').focus({ preventScroll: true }); }, 0); }
   if (page === 'home') mountHome();
+  if (page === 'about') mountIndex();
   if (page === 'shop') mountShop();
   if (page === 'product') mountProduct();
   if (page === 'cart') renderCartPage();
@@ -313,7 +352,7 @@
   if (page === 'confirmed') mountConfirmed();
   if (page === 'track') mountTrack();
   if (page === 'wishlist') renderWishlist();
-  if (page === 'about') $('#about-art').innerHTML = art(byId('lily-orchid'), 'close');
+  
   if (page === 'delivery' && location.hash) { var t = $(location.hash); if (t && t.tagName === 'DETAILS') t.open = true; }
   reveal();
 })();

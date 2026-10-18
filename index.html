@@ -9,42 +9,74 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&family=Yellowtail&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&family=Yellowtail&display=swap">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body id="top" data-page="home">
 <main id="main">
-<section class="hero gridpaper"><div class="container hero__grid">
-<div class="hero__copy"><p class="eyebrow">Handmade crochet bouquets</p>
-<h1 class="display">Flowers you get to <span class="script">keep.</span></h1>
+<section class="hero"><div class="container hero__grid">
+<div class="hero__head">
+<p class="hero__kicker"><span class="hand hand--rose">handmade crochet &middot; ur beloved</span><i data-doodle="sparkle" class="d-xs doodle--rose is-inline"></i></p>
+<h1 class="mega">Flowers you get to <span class="script">keep.</span></h1>
+</div>
+<a class="hero__flower" href="collection.html?c=stems" aria-label="Corn poppy, a single crochet stem">
+<img class="cut" src="assets/cut/poppy.webp" alt="An orange crocheted corn poppy" width="826" height="594" fetchpriority="high">
+<span class="hero__note hero__note--1"><span class="hand">4 big petals</span><i data-doodle="arrow-curl" class="d-m doodle--ink"></i></span>
+<span class="hero__note hero__note--2"><span class="hand hand--rose">handmade,<br>washable</span><i data-doodle="rays" class="d-s doodle--rose"></i></span>
+<span class="hero__note hero__note--3"><i data-doodle="arrow-up" class="d-s doodle--olive"></i><span class="hand hand--olive">11 inch long stem</span></span>
+<i data-doodle="sparkle" class="d-s h-a doodle--rose"></i><i data-doodle="star" class="d-s h-b doodle--berry"></i>
+</a>
+<div class="hero__tail">
 <p class="lede">Every URB bouquet is crocheted by hand, stem by stem, then wrapped and ribboned. It never wilts, so the feeling stays on the shelf long after the day.</p>
-<div class="hero__cta"><a class="btn btn--ink" href="shop.html">Shop bouquets</a><a class="btn btn--line" href="contact.html#custom">Request a custom bouquet</a></div>
-<p class="hero__facts"><span>20 designs</span><span>Never wilts</span><span>Cash on delivery</span></p></div>
-<a class="hero__art" id="hero-art" href="product.html?id=rose-amour" aria-label="Rose Amour Bouquet"></a>
+<div class="hero__cta"><a class="btn btn--ink" href="shop.html">Shop bouquets</a><a class="btn btn--line" href="contact.html#custom">Request a custom piece</a></div>
+<p class="hero__facts"><span class="hand hand--olive">20 bouquets</span><span class="hand hand--olive">never wilts</span><span class="hand hand--olive">cash on delivery</span></p>
+</div>
+
 </div></section>
 
-<section class="section section--sunk"><div class="container">
-<div class="head head--row"><div><p class="eyebrow">Just finished</p><h2 class="h1">New in the basket</h2></div><a class="btn btn--line" href="shop.html">See all 20</a></div>
+<section class="section"><div class="container scatter">
+<p class="mega-sm scatter__p" data-reveal>Every petal <span class="script">stitched</span> by hand, one loop at a time.</p>
+<div class="scatter__cuts" aria-hidden="true"><img class="cut" src="assets/cut/daisy-keyring.webp" alt="" width="529" height="872" loading="lazy"><img class="cut" src="assets/cut/swan.webp" alt="" width="591" height="945" loading="lazy"><img class="cut" src="assets/cut/coffee-keyring.webp" alt="" width="700" height="1100" loading="lazy"><img class="cut" src="assets/cut/cat.webp" alt="" width="511" height="728" loading="lazy"></div>
+</div></section>
+
+<section class="section" id="crafts"><div class="container">
+<div class="head"><p class="hand hand--rose">what are we making today?</p><h2 class="mega-sm">Shop by <span class="script">craft</span></h2><i data-doodle="arrow-loop" class="d-m doodle--ink"></i></div>
+<div class="index" id="idx"></div></div></section>
+
+<section class="section"><div class="container">
+<div class="head head--row"><div><p class="hand hand--olive">just finished</p><h2 class="mega-sm">New in the basket</h2></div><a class="btn btn--line" href="shop.html">See all 20</a></div>
 <div class="grid" id="feat"></div></div></section>
 
 <section class="section"><div class="container">
-<div class="head"><p class="eyebrow">By occasion</p><h2 class="h1">What are we saying?</h2></div>
-<div class="occs" id="occ"></div></div></section>
+<div class="head"><p class="hand hand--rose">real making times, from our posts</p><h2 class="mega-sm">How long does it <span class="script">take?</span></h2></div>
+<div class="times">
+<div class="time" data-reveal><i data-doodle="yarn" class="d-s"></i><span class="time__n">35<small>min</small></span><span class="time__l">a pink daisy keyring</span></div>
+<div class="time" data-reveal><i data-doodle="clock" class="d-s"></i><span class="time__n">2.5<small>hrs</small></span><span class="time__l">a corn poppy, 11 inch stem</span></div>
+<div class="time" data-reveal><i data-doodle="clock" class="d-s"></i><span class="time__n">3<small>hrs</small></span><span class="time__l">an iris flower, 6 petals</span></div>
+<div class="time" data-reveal><i data-doodle="hook" class="d-s"></i><span class="time__n">12<small>hrs</small></span><span class="time__l">one striped cotton top</span></div>
+</div>
+<p class="lede" data-reveal>Acrylic and cotton yarns, washed and worn. Slow on purpose.</p></div></section>
 
-<section class="section section--dark"><div class="container split2 split2--flip">
-<div class="stack"><p class="eyebrow">The URB way</p><h2 class="h1">Made by hand. <span class="script">Made to keep.</span></h2>
-<p class="lede">Each petal is crocheted one stitch at a time, then arranged around one idea and wrapped in paper and ribbon. No two stems are exactly alike.</p>
-<a class="btn btn--light" href="about.html">Our story</a></div>
-<div class="facts"><div class="fact"><b>Crocheted by hand</b><p>Every petal, leaf and bud.</p></div><div class="fact"><b>Never wilts</b><p>No water, no waste, no goodbye.</p></div><div class="fact"><b>Wrapped and ribboned</b><p>Ready to give the moment it arrives.</p></div></div>
-</div></section>
+<section class="section"><div class="container split2"><figure class="split2__art" data-reveal><img class="art art--soft" src="assets/photos/box.webp" alt="A hand holding the berry-pink urb parcel box by its pink string handle" width="1000" height="1250" loading="lazy"></figure>
+<div class="stack"><p class="hand hand--rose">the parcel</p><h2 class="mega-sm">Arrives in the <span class="script">urb</span> box.</h2><p class="lede">Berry pink, with petal prints and a pink handle. Every order is packed in it, so opening it feels like the gift it is.</p><div class="hero__cta"><a class="btn btn--ink" href="delivery.html">Delivery details</a><a class="btn btn--text" href="track.html">track an order &rarr;</a></div></div></div></section>
 
 <section class="section"><div class="container">
-<div class="head"><p class="eyebrow">How it works</p><h2 class="h1">Three steps to a doorstep</h2></div>
-<div class="steps3"><div class="step3"><h3>Choose</h3><p>Pick a bouquet by flower, colour or occasion.</p></div><div class="step3"><h3>Personalise</h3><p>Choose a date and add a card message. Want other colours? Ask for a custom bouquet.</p></div><div class="step3"><h3>Delivered</h3><p>Pay on delivery or by transfer, and track it live.</p></div></div>
-<div class="band" ><a class="btn btn--ink" href="shop.html">Start with a bouquet</a></div></div></section>
+<div class="head"><p class="hand hand--olive">what are we saying?</p><h2 class="mega-sm">By <span class="script">occasion</span></h2></div>
+<div class="occs" id="occ"></div></div></section>
+
+<section class="section"><div class="container">
+<div class="head"><p class="hand hand--rose">three steps to a doorstep</p><h2 class="mega-sm">Easy as <span class="script">one, two, three</span></h2></div>
+<div class="steps3">
+<div class="step3" data-reveal><span class="step3__n">1</span><h3>Choose</h3><p>Pick a bouquet by flower, colour or occasion.</p><i data-doodle="arrow-right" class="d-m doodle--ink"></i></div>
+<div class="step3" data-reveal><span class="step3__n">2</span><h3>Personalise</h3><p>Choose a date and add a card message. Want other colours? Ask for a custom piece.</p><i data-doodle="arrow-right" class="d-m doodle--ink"></i></div>
+<div class="step3" data-reveal><span class="step3__n">3</span><h3>Delivered</h3><p>Pay on delivery or by transfer, and track it live.</p><i data-doodle="heart" class="d-s doodle--rose"></i></div>
+</div></div></section>
+
+<section class="closing container"><i data-doodle="heart" class="d-s doodle--rose"></i><p class="mega">ur <span class="script">beloved.</span></p><div class="hero__cta"><a class="btn btn--ink" href="shop.html">Start with a bouquet</a><a class="btn btn--line" href="contact.html">Say hello</a></div></section>
 </main>
 <script src="js/data.js"></script>
+<script src="js/doodles.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

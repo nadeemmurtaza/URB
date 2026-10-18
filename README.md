@@ -9,6 +9,6 @@ node scripts/verify.mjs              # links, flows, overflow at 7 widths (needs
 
 - Research and gaps: [docs/RESEARCH.md](docs/RESEARCH.md)
 - Tokens, laws, workflows: [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md)
-- Tokens: `css/tokens.css`. Products: `js/data.js`.
+- Tokens: `css/tokens.css`. Products and collections: `js/data.js`. Doodles: `js/doodles.js`.
 
 Logo, cover and product photos come from URB's Pluto store listing (demo use). Replace with originals when supplied.

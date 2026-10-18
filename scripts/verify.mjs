@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
 const base = process.argv[2] || 'http://127.0.0.1:4173';
-const pages = ['index', 'shop', 'product?id=white-muse', 'cart', 'checkout', 'order-confirmed', 'track', 'wishlist', 'about', 'delivery', 'contact', '404'];
+const pages = ['index', 'shop', 'collection?c=stems', 'collection?c=plushies', 'collection?c=wear', 'collection?c=little', 'product?id=white-muse', 'cart', 'checkout', 'order-confirmed', 'track', 'wishlist', 'about', 'delivery', 'contact', '404'];
 const widths = [280, 380, 640, 768, 1024, 1280, 1536];
 const fails = [];
 const ok = (c, m) => { if (!c) { fails.push(m); console.log('FAIL', m); } };
@@ -13,7 +13,7 @@ const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const page = await ctx.newPage();
 page.on('console', m => { if (m.type() === 'error' && !/fonts\.g/.test(m.text())) ok(false, 'console: ' + m.text()); });
 page.on('pageerror', e => ok(false, 'pageerror: ' + e.message));
-page.on('requestfailed', r => { if (!/fonts\.g/.test(r.url())) ok(false, 'request failed ' + r.url()); });
+page.on('requestfailed', r => { if (!/fonts\.g/.test(r.url()) && !/ABORTED/.test(r.failure()?.errorText || '')) ok(false, 'request failed ' + r.url()); });
 
 // 1. Links
 const seen = new Set();
@@ -31,8 +31,9 @@ console.log('links checked:', seen.size);
 
 // 2. Buy flow
 await page.goto(base + '/index.html');
-await page.click('#hero-art');
-await page.waitForURL(/product\.html\?id=rose-amour/);
+await page.click('.hero__flower'); await page.waitForURL(/collection\.html\?c=stems/);
+await page.goto(base + '/shop.html'); await page.click('#grid .card:nth-child(1) .card__name a');
+await page.waitForURL(/product\.html\?id=/); await page.goto(base + '/product.html?id=rose-amour');
 await page.click('[data-intent="add"]');
 ok(await page.isVisible('#pdp #date[aria-invalid="true"]'), 'date validation shows');
 const d = new Date(Date.now() + 2 * 864e5).toISOString().slice(0, 10);
@@ -59,6 +60,12 @@ const oid = new URL(page.url()).searchParams.get('o');
 await page.click('#done a[href^="track.html"]'); await page.waitForSelector('.steps');
 ok(await page.isVisible('.steps li[data-state="done"]'), 'tracking shows progress');
 await page.goto(base + '/track.html'); await page.fill('#t-id', 'junk'); await page.click('#track button'); ok((await page.textContent('#track-out')).includes('No order'), 'unknown order has a way forward');
+// crafts: peek sheet and enquiry prefill
+await page.goto(base + '/collection.html?c=plushies'); await page.click('[data-action="peek"]');
+ok(await page.isVisible('#dlg-peek[open] .peek__body'), 'peek sheet opens');
+await page.click('#dlg-peek a[href^="contact.html"]'); await page.waitForURL(/contact\.html\?c=plushies/);
+ok((await page.inputValue('#x-brief')).includes('Chonky cat'), 'enquiry is prefilled');
+await page.goto(base + '/collection.html?c=nope'); ok((await page.textContent('#coll')).includes('could not find'), 'unknown collection has a way forward');
 // shop filters, wishlist, search
 await page.goto(base + '/shop.html?cat=roses'); const nRoses = (await page.$$('#grid .card')).length; ok(nRoses > 0 && nRoses < 20, 'rose filter narrows');
 await page.fill('#shop-q', 'zzzz'); ok(await page.isVisible('#grid .empty'), 'empty shop state');
@@ -70,6 +77,14 @@ await page.goto(base + '/contact.html'); await page.click('[data-form="contact"]
 await page.fill('#m-name', 'A'); await page.fill('#m-mail', 'a@b.co'); await page.fill('#m-msg', 'Hi'); await page.click('[data-form="contact"] button'); ok(await page.isVisible('[data-done="contact"]'), 'contact success state');
 await page.goto(base + '/product.html?id=nope'); ok((await page.textContent('#pdp')).includes('could not find'), 'unknown product has a way forward');
 
+// 2b. Every image on every page loads
+for (const p of pages) {
+  await page.goto(`${base}/${p.includes('?') ? p.replace('?', '.html?') : p + '.html'}`);
+  await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise(r => setTimeout(r, 60)); } });
+  await page.evaluate(async () => { const is = [...document.images]; is.forEach(i => { i.loading = 'eager'; }); await Promise.all(is.map(i => i.decode().catch(() => {}))); });
+  const broken = await page.$$eval('img', is => is.filter(i => !i.complete || i.naturalWidth === 0).map(i => i.getAttribute('src')));
+  ok(broken.length === 0, `broken images on ${p}: ${broken.join(', ')}`);
+}
 // 3. Overflow and screenshots
 for (const w of widths) {
   await page.setViewportSize({ width: w, height: 900 });
