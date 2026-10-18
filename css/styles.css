@@ -152,9 +152,10 @@ button { cursor: pointer; background: none; border: 0; padding: 0; touch-action:
 .hero__kicker { display: flex; align-items: center; gap: var(--s-2); transform: rotate(-3deg); width: fit-content; }
 .hero .mega { margin-top: var(--s-1); }
 .hero__flower { position: relative; z-index: 2; display: block; width: min(100%, 520px); margin-top: calc(-1 * var(--s-5)); margin-bottom: var(--s-6); margin-inline: auto; }
-.hero__flower .cut { width: 100%; height: auto; filter: drop-shadow(var(--shadow-cut)); animation: bob 8s var(--ease-panel) infinite alternate; transform-origin: 50% 80%; }
+.hero__plant { display: block; position: relative; animation: bob 8s var(--ease-panel) infinite alternate; transform-origin: 50% 80%; }
+.hero__flower .cut { display: block; width: 100%; height: auto; filter: drop-shadow(var(--shadow-cut)); }
 @keyframes bob { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(calc(-1 * var(--s-3))) rotate(2deg); } }
-@media (prefers-reduced-motion: reduce) { .hero__flower .cut { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .hero__plant { animation: none; } }
 .hero__note { position: absolute; z-index: 3; display: grid; gap: var(--s-1); }
 .hero__note .hand { transform: rotate(-4deg); }
 .hero__note--1 { inset-block-start: 14%; inset-inline-start: 2%; }
@@ -718,3 +719,24 @@ main { overflow-x: clip; }
   .scatter__cuts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); align-items: end; width: 100%; }
   .scatter__cuts .fig { position: relative; width: 100%; max-width: 260px; justify-self: center; }
 }
+
+/* Hero notes live in room reserved around the flower, never on it; arrows point in and stop short */
+.hero__flower { padding-block: calc(var(--s-8) + var(--s-5)) calc(var(--s-8) + var(--s-6)); }
+.hero__note { max-width: 9em; gap: var(--s-2); }
+.hero__note .doodle { width: var(--s-6); height: auto; }
+.hero__note--1 { display: grid; inset: 0 auto auto 4%; justify-items: start; text-align: start; }
+.hero__note--1 .hand { order: 0; }
+.hero__note--1 .doodle { rotate: 90deg; margin-inline-start: var(--s-3); }
+.hero__note--2 { inset: 0 4% auto auto; justify-items: end; text-align: end; }
+.hero__note--3 { inset: auto auto 0 4%; justify-items: start; }
+@media (min-width: 1024px) {
+  .hero__note--1, .hero__note--3 { inset-inline-start: 12%; }
+  .hero__note--2 { inset-inline-end: 4%; }
+}
+.hero__note--3 { max-width: 14em; }
+
+/* A drawn stem growing from the poppy, part of the same plant so it moves with it */
+.hero__flower .cut { position: relative; z-index: 2; }
+.hero__stem { inset-block-start: 82%; inset-inline-start: 46%; width: auto; height: calc(var(--s-8) + var(--s-7)); z-index: 1; stroke: var(--olive-deep); }
+.hero__stem path { stroke-width: 7px; }
+.hero__stem path:nth-child(n+2) { stroke-width: 4px; fill: color-mix(in srgb, var(--olive-deep) 30%, transparent); }
