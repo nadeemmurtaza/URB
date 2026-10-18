@@ -84,8 +84,8 @@ await page.goto(base + '/product.html?id=nope'); ok((await page.textContent('#pd
 await page.goto(base + '/index.html'); await page.waitForTimeout(1500);
 const m = await page.evaluate(() => ({ anims: document.getAnimations().length, letters: document.querySelectorAll('.sp .ch').length, drawn: document.querySelectorAll('.doodle[data-in]').length, hearts: document.querySelectorAll('.bg__floats .doodle').length, marquee: !!document.querySelector('.marquee__track') && document.querySelector('.marquee__track').getAnimations().length }));
 console.log('motion:', JSON.stringify(m));
-if (REDUCED) ok(m.letters === 0 && m.hearts === 0 && !(await page.evaluate(() => document.documentElement.classList.contains('m'))), 'reduced motion: no motion engine ' + JSON.stringify(m));
-else ok(m.anims > 80 && m.letters > 40 && m.hearts === 9 && m.marquee > 0, 'motion engine is running ' + JSON.stringify(m));
+if (REDUCED) ok(m.letters === 0 && !(await page.evaluate(() => document.documentElement.classList.contains('m'))), 'reduced motion: no motion engine ' + JSON.stringify(m));
+else ok(m.anims > 20 && m.letters > 40 && m.marquee > 0, 'motion engine is running ' + JSON.stringify(m));
 await page.goto(base + '/about.html'); await page.waitForTimeout(800);
 ok((await page.$$('.tl')).length === 10, 'story timeline has 10 entries');
 ok((await page.textContent('h1')).includes('everywhere'), 'story headline');

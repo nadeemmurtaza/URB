@@ -61,3 +61,11 @@ Checked every page at 390 and 1280 with an automated dead-space detector (gaps o
 - Fixed: "Check out" headline letters collided with the script word.
 - Changed: headings use Rubik 800 (flat-topped, round-shouldered, closest free match to the urb logo); buttons are glass (blur, gloss highlight, inner light edge, a doodle sparkle on each).
 - Known: full-page screenshots show the fixed background only once; in a browser it stays behind the whole page.
+
+## Professional, still cute (refinement pass)
+
+Principle: cute comes from the product, the palette and a few doodles; professionalism comes from restraint and consistency.
+- **Type roles.** Rubik 700 for headings, Nunito for everything you read or press (nav, buttons, labels, prices, forms, footer). Handwriting (Caveat) only for the few annotation notes beside a product and one pull quote. Eyebrows are small uppercase Nunito. No tilted text anywhere.
+- **One heading scale** (hero 6.75rem max, section 3.75rem, page 3.75rem, product 3rem) instead of ad-hoc giant sizes.
+- **Motion, calmed.** Removed: cursor sparkle trail, rising hearts, line-boil jitter, perpetual letter wave, hover tilts, intro splash, second marquee row, doodle on every button. Kept: letters rising once, a single slow marquee, gentle float on story cut-outs, slow drifting background, scroll progress, soft hero parallax, five hearts when adding to the bag. Reduced-motion still shows everything, still.
+- **Tags** are small pills (-10%, last one), prices are Nunito, shadows are softer, buttons are refined glass without ornaments.

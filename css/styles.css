@@ -560,3 +560,110 @@ main { overflow-x: clip; }
   .pdp__gallery { position: sticky; top: 112px; align-self: start; }
 }
 .line__side .link { min-height: 40px; display: inline-flex; align-items: center; }
+
+
+/* =====================================================================
+   Refinement: professional, still cute.
+   Rules: one clean text face for everything you read or press; the handwritten face only for a few
+   annotation notes beside a product; no tilted text; headings sized on one calm scale; soft, even shadows.
+   ===================================================================== */
+/* Functional text is Nunito / Rubik, never the handwriting face */
+.hand { font: 700 var(--fs-xs)/1.4 var(--font-text); letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--mauve-deep); }
+.hand--rose { color: var(--script); } .hand--olive { color: var(--olive-deep); } .hand--berry { color: var(--burgundy); }
+.hero__note .hand, .pdp__note .hand, .quote .hand { font: 700 var(--fs-note)/1.15 var(--font-note); letter-spacing: 0; text-transform: none; color: var(--ink); }
+.hero__note .hand--rose, .pdp__note .hand--rose, .hero__note--2 .hand { color: var(--script); }
+.hero__note .hand--olive, .pdp__note .hand--olive, .hero__note--3 .hand { color: var(--olive-deep); }
+.header__nav a, .menu a, .footer .list a, .chip, .btn--text, .contact-links a, .count, .steps li, .stock, .toast, .field label, .legend, .promo label, .field__error, .peek__facts li, .price__was, .tag, .index__sub, .index__n, .tl__date .hand { font-family: var(--font-text); }
+.header__nav a { font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0.01em; }
+.header__nav a:hover { transform: none; color: var(--script); }
+.footer .list a { font-size: var(--fs-sm); font-weight: 600; min-height: 36px; }
+.footer .list a:hover, .menu a:hover, .result:hover, .contact-links a:hover { transform: none; }
+.chip { font-size: var(--fs-sm); font-weight: 600; min-height: 40px; }
+.chip:hover { transform: none; }
+.btn--text { font-size: var(--fs-sm); font-weight: 700; }
+.field label, .legend, .promo label { font-size: var(--fs-sm); font-weight: 700; line-height: 1.2; }
+.field__error { font-size: var(--fs-sm); font-weight: 600; line-height: 1.3; }
+.count { font-size: var(--fs-sm); font-weight: 600; }
+.stock { font-size: var(--fs-sm); font-weight: 700; }
+.steps li { font-size: var(--fs-md); font-weight: 600; }
+.price__was { font-size: var(--fs-sm); font-weight: 400; }
+.index__sub { font-size: var(--fs-sm); font-weight: 600; margin-top: var(--s-1); }
+.index__n { font-size: var(--fs-sm); font-weight: 700; letter-spacing: var(--track-caps); }
+.contact-links a { font-size: var(--fs-lg); }
+.toast { font-size: var(--fs-sm); font-weight: 700; transform: none; }
+.menu a { font-size: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem); font-weight: 700; }
+
+/* Headings: one calm scale */
+.mega, .mega-sm, .display, .h1, .page-head .h1, .pdp__title, .empty__t { font-weight: 700; letter-spacing: -0.03em; }
+.mega { line-height: 0.98; }
+.mega-sm { font-size: clamp(2rem, 1.2rem + 3.8vw, 3.75rem); line-height: 1.04; }
+.page-head .h1 { font-size: clamp(2.25rem, 1.4rem + 3.6vw, 3.75rem); line-height: 1.04; }
+.pdp__title { font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3rem); line-height: 1.06; }
+.tl__quote { font-size: clamp(1.75rem, 1.1rem + 2.6vw, 3rem); line-height: 1.08; font-weight: 700; }
+.index__w { font-size: clamp(1.9rem, 1rem + 4.4vw, 4rem); line-height: 1.05; font-weight: 700; }
+.time__n { font-size: clamp(2.6rem, 1.6rem + 3.6vw, 4.25rem); font-weight: 700; }
+.step3__n { font-size: clamp(2.4rem, 1.6rem + 3vw, 3.5rem); font-weight: 700; }
+.mq { font-size: clamp(1.75rem, 1.1rem + 2.6vw, 3rem); font-weight: 700; }
+.occ { font-size: clamp(1.5rem, 1rem + 2.4vw, 2.5rem); font-weight: 700; }
+.script { font-size: 1.08em; line-height: 0.9; }
+.head { gap: var(--s-1); margin-bottom: var(--s-5); }
+.lede { font-size: var(--fs-md); line-height: 1.65; max-width: 36em; }
+@media (min-width: 768px) { .lede { font-size: var(--fs-lg); } }
+
+/* Sections: even vertical rhythm */
+.section { padding-block: var(--section); }
+.hero { padding-block: var(--s-4) var(--s-6); }
+.hero__kicker { transform: none; }
+.hero__note .hand, .pdp__note .hand { transform: none; text-shadow: none; }
+.hero__facts { gap: var(--s-1) var(--s-4); }
+.hero__facts .hand { text-transform: none; letter-spacing: 0; font-size: var(--fs-sm); font-weight: 700; color: var(--ink-2); }
+.hero__facts .hand::before { content: "\2713\00A0"; color: var(--olive-deep); }
+
+/* Product cards: clean, even, quiet */
+.card__media .art { filter: drop-shadow(var(--shadow-cut)); }
+.card:hover .card__media .art { transform: translateY(-4px) scale(1.02); }
+.card__name { font-size: var(--fs-md); font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; }
+.card .price { font-size: var(--fs-sm); }
+.tag { top: var(--s-2); inset-inline-start: var(--s-2); transform: none; text-shadow: none; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.04em; padding: var(--s-1) var(--s-2); border-radius: var(--r-pill); background: var(--burgundy); color: var(--on-action); line-height: 1.2; }
+.tag--low { top: auto; bottom: var(--s-2); background: var(--olive-deep); transform: none; color: var(--on-action); }
+.tag--inline { transform: none; position: static; }
+.card__body .hand { text-transform: none; letter-spacing: 0; font-size: var(--fs-sm); color: var(--olive-deep); }
+.icon-btn:hover { transform: none; background: var(--mauve-wash); }
+
+/* Quiet cut-outs: no tilt anywhere */
+.scatter__cuts .cut:nth-child(odd), .scatter__cuts .cut:nth-child(even), .scatter__cuts .cut:hover { transform: none; }
+.index__row:hover .index__img { transform: translateY(-4px); }
+.index__row:hover .index__w { transform: none; color: var(--script); }
+.btn--ink:hover { transform: translateY(-1px); }
+.menu a { padding-block: var(--s-2); }
+
+/* Buttons: refined glass */
+.btn { font-family: var(--font-text); font-weight: 700; font-size: var(--fs-sm); letter-spacing: 0.02em; padding-inline: var(--s-5); }
+.btn__d { display: none; }
+
+/* Story and forms */
+.tl-wrap { gap: var(--s-7); }
+.tl__date { gap: var(--s-2); }
+.quote .hand { font-size: clamp(1.4rem, 1.1rem + 1.4vw, 2rem); }
+.choice span b { font-size: var(--fs-md); font-weight: 700; }
+.field input, .field select, .field textarea, .promo input, .newsletter input, .controls select { font-size: var(--fs-md); }
+.form-card h2, .panel__t, .sheet__title { font-weight: 700; }
+.marquee { padding-block: var(--s-2); }
+
+/* Final polish */
+.mq--out { color: var(--ink); -webkit-text-stroke: 0; }
+.mq--script { font-size: 1.1em; }
+.marquee .doodle { width: var(--s-5); }
+.hero__head { max-width: 11em; }
+@media (min-width: 1024px) { .hero__head { max-width: none; } .hero .mega { max-width: 7.2em; } }
+.hero__note--1 { inset-block-start: auto; inset-block-end: 10%; inset-inline-start: -2%; }
+.hero__note--1 .hand { order: 2; }
+@media (min-width: 1024px) { .hero__note--1 { inset-inline-start: -10%; } }
+.scatter__p { max-width: 12em; }
+.scatter { min-height: 0; }
+@media (max-width: 1023px) {
+  .hero__flower { margin-top: var(--s-3); margin-bottom: var(--s-5); width: min(92%, 440px); }
+  .hero__note--1 { display: none; }
+  .hero__note--3 { inset-block-end: -6%; inset-inline-start: 4%; }
+  .hero__note--2 { inset-block-start: 0; inset-inline-end: 0; }
+}

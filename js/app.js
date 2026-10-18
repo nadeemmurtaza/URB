@@ -31,7 +31,6 @@
     });
   }
   function doodles(root) {
-    btnDoodles(root);
     $$('[data-doodle]', root || document).forEach(function (el) {
       var t = document.createElement('template'); t.innerHTML = DOOD(el.getAttribute('data-doodle'), el.className);
       if (t.content.firstChild) el.replaceWith(t.content.firstChild);

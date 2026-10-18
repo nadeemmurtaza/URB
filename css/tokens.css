@@ -62,8 +62,8 @@
   --fs-lg: 1.25rem;
   --fs-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --fs-2xl: clamp(2rem, 1.5rem + 2.2vw, 3rem);
-  --fs-mega: clamp(3rem, 1.2rem + 12.5vw, 9rem);
-  --fs-note: clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
+  --fs-mega: clamp(2.75rem, 1.4rem + 8.5vw, 6.75rem);
+  --fs-note: clamp(1.15rem, 1.05rem + 0.5vw, 1.5rem);
   --fs-3xl: clamp(2.5rem, 1.7rem + 3.8vw, 4.5rem);
   --lh-tight: 1.05;
   --lh-snug: 1.25;
@@ -92,7 +92,7 @@
   --r-lg: 24px;
   --r-pill: 999px;
   --tap: 48px;
-  --shadow-cut: 0 14px 18px rgb(54 34 42 / 0.22);
+  --shadow-cut: 0 10px 14px rgb(54 34 42 / 0.14);
   --glass-ink: rgb(138 74 92 / 0.88);
   --glass-clear: rgb(255 251 243 / 0.42);
   --glass-line: rgb(255 251 243 / 0.7);
