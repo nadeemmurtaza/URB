@@ -11,21 +11,30 @@
 | github.com/nadeemmurtaza/URB | Reachable, **empty** (no commits). The site is built here. |
 | Web search for the brand | Nothing found beyond the links above. |
 
-Not known, therefore not invented: logo, brand colours, photography, city or address, phone or WhatsApp, founding story, real reviews.
-**To close the gap, send:** the logo file, 6 to 10 screenshots of Instagram or TikTok (grid and bio), real product photos, the city and delivery coverage, and a contact number.
+Not known, therefore not invented: city or address, phone or WhatsApp, founding story, real reviews.
+**To close the gap, send:** the original logo file (vector if possible), any Instagram or TikTok screenshots showing a brand font or sticker set, the city and delivery coverage, lead time for made-to-order pieces, and a contact number.
+
+## Brand identity (measured from the store's logo and cover image, Pluto)
+
+The social pages stayed blocked, but the Pluto store exposes URB's **logo, cover banner and 20 product photos**, so the identity below is measured, not guessed.
+
+- **Wordmark:** chunky, rounded, lowercase **"urb"** in dusty mauve `#AC6579`, with a small olive `#889440` tag **"eloved"** and a daisy. [Likely] the pair reads "ur beloved" ("you are beloved").
+- **Cover:** cream grid paper `#F9EFDE`, taupe gingham side bands `#D5CFCA` / `#B8A79D`, hand-drawn burgundy stars `#89424B`, brush-script lettering in rose `#C44058`, black doodle sparkles.
+- **Packaging (photos):** mauve, dusty-rose and blush wrapping papers, kraft and newsprint, satin ribbons, a small "urb" sticker.
+- **Correction to my first pass:** URB sells **handmade crochet flowers**, not fresh ones (stem lists, "Thai rose", "forget-me-knot", and every photo). The first draft's fresh-flower copy was wrong and has been replaced.
 
 ## What URB is (from the Pluto listing)
 
-- A Pakistani **hand-tied flower bouquet** seller, handle `shop.urb`, listed on Pluto (a handmade/local marketplace) with a "beginner" badge.
+- A Pakistani **handmade crochet flower bouquet** seller, handle `shop.urb`, listed on Pluto (a handmade/local marketplace) with a "beginner" badge.
 - 20 named designs, Rs 2,650 to Rs 17,505. 19 of 20 carry 10% off the struck-through price.
-- Stock is tiny (14 designs show 1 or 2 left): this is **small-batch, one-off composition**, not a florist warehouse.
+- Stock is tiny (14 designs show 1 or 2 left): this is **small-batch handmade work**, not a florist warehouse.
 - Delivery fee is per design: Rs 180, 360 or 550.
 - Product copy is a precise stem inventory ("1 pink double-layer sunflower, lavender, 1 freesia stem"). Names are poetic (Blue Hour, Velvet Sun, Stargazer Sky). Signature flower: **forget-me-not**.
 - Marketplace category: Flowers & Gifts, sub-categories Birthday, Flower Bouquets, Gift, Flowers.
 
 ## Positioning drawn from it
 
-Boutique, composed, honest about scarcity. Not a mass-market "send flowers" site. Tone: quiet, specific, a little poetic. Audience: gifting buyers in Pakistan, mobile-first, often paying cash on delivery.
+Warm, handmade, playful-premium, honest about scarcity. Not a mass-market "send flowers" site. Tone: quiet, specific, a little poetic. Audience: gifting buyers in Pakistan, mobile-first, often paying cash on delivery.
 
 ## Data decisions and open questions
 
@@ -34,3 +43,7 @@ Boutique, composed, honest about scarcity. Not a mass-market "send flowers" site
 - Occasions (Love, Anniversary…) and the card copy are demo copy, not URB's own.
 - City list at checkout is generic. Confirm delivery coverage.
 - No reviews are shown on purpose: none could be sourced.
+
+- Product photos are URB's own, taken from the Pluto listing, and are used here as a demo. Replace with originals when available.
+- Lead time for made-to-order pieces and returns policy are not stated anywhere and are not shown.
+- The wordmark font is not identified; the logo image is used as-is. Fredoka (rounded) stands in for headings and Yellowtail echoes the cover script. Confirm the real fonts.

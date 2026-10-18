@@ -32,7 +32,7 @@ console.log('links checked:', seen.size);
 // 2. Buy flow
 await page.goto(base + '/index.html');
 await page.click('#hero-art');
-await page.waitForURL(/product\.html\?id=peony-grace/);
+await page.waitForURL(/product\.html\?id=rose-amour/);
 await page.click('[data-intent="add"]');
 ok(await page.isVisible('#pdp #date[aria-invalid="true"]'), 'date validation shows');
 const d = new Date(Date.now() + 2 * 864e5).toISOString().slice(0, 10);

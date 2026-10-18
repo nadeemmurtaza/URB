@@ -2,40 +2,58 @@
    Sources: ROYA (roles, motion curves, seven widths), ZUwithCamera (duration ladder, tap rules),
    MILES (one-file colour discipline, view transitions), yaseenecom (clear-space and one-ink logo rules). */
 :root {
-  /* Colour: roles, not hues */
-  --paper: #F7F2EB;
-  --paper-sunk: #EFE7DC;
-  --card: #FFFDF9;
-  --ink: #1E2420;
-  --ink-2: #4A524B;
-  --ink-3: #5F665F;
-  --line-rgb: 30 36 32;
+  /* Colour: measured from the URB logo and store cover (plutopakistan.com/stores/urb-394).
+     Logo mauve #AC6579, "eloved" olive #889440, cover cream #F9EFDE, cover script rose #C44058,
+     cover star burgundy #89424B, cover gingham taupe #D5CFCA / #B8A79D. Deeper steps are darkened
+     from the same hues so small text and buttons clear 4.5:1. */
+  --mauve: #AC6579;
+  --mauve-deep: #8A4A5C;
+  --mauve-wash: #E9CDD2;
+  --olive: #889440;
+  --olive-deep: #5F6B26;
+  --burgundy: #89424B;
+  --script: #C44058;
+  --cream: #F9EFDE;
+  --gingham-a: #D5CFCA;
+  --gingham-b: #B8A79D;
+  --gingham-line: rgb(184 167 157 / 0.55);
+  --wine: #4A2530;
+
+  --paper: var(--cream);
+  --paper-glass: rgb(249 239 222 / 0.92);
+  --paper-sunk: #EFE3CF;
+  --card: #FFFBF3;
+  --ink: #36222A;
+  --ink-2: #5C4249;
+  --ink-3: #6F555B;
+  --line-rgb: 54 34 42;
   --line: rgb(var(--line-rgb) / 0.14);
   --line-strong: rgb(var(--line-rgb) / 0.32);
-  --scrim: rgb(30 36 32 / 0.48);
+  --grid-line: rgb(184 167 157 / 0.28);
+  --scrim: rgb(54 34 42 / 0.5);
 
-  --rose: #B8626E;
-  --rose-deep: #8F3F4B;
-  --blush: #EBCFCB;
-  --sage: #7F9482;
-  --forget: #8EA7D8;
-  --forest: #1F2B25;
-  --on-forest: #F7F2EB;
-  --on-forest-dim: #C9D0C6;
+  --action: var(--mauve-deep);
+  --action-hover: #703A49;
+  --on-action: #FFFBF3;
+  --forest: var(--wine);
+  --on-forest: var(--cream);
+  --on-forest-dim: #E3CFCB;
+  --on-dark-line: rgb(249 239 222 / 0.2);
   --error: #A3342A;
-  --ok: #2F6B4A;
-  --on-ink: #F7F2EB;
+  --ok: var(--olive-deep);
+  --on-ink: var(--cream);
 
-  /* Type: Cormorant Garamond (display), Manrope (text). Scale 1.25 on phones, 1.333 from 768. */
-  --font-display: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
-  --font-text: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Type: Fredoka (display, echoes the rounded logo), Nunito (text), Yellowtail (script accent, echoes the cover lettering). Scale 1.25 on phones, 1.333 from 768. */
+  --font-display: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  --font-text: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-script: 'Yellowtail', 'Brush Script MT', cursive;
   --fs-xs: 0.75rem;
   --fs-sm: 0.875rem;
   --fs-md: 1rem;
   --fs-lg: 1.25rem;
   --fs-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --fs-2xl: clamp(2rem, 1.5rem + 2.2vw, 3rem);
-  --fs-3xl: clamp(2.75rem, 1.8rem + 4.2vw, 5rem);
+  --fs-3xl: clamp(2.5rem, 1.7rem + 3.8vw, 4.5rem);
   --lh-tight: 1.05;
   --lh-snug: 1.25;
   --lh-body: 1.6;
@@ -63,8 +81,8 @@
   --r-lg: 24px;
   --r-pill: 999px;
   --tap: 48px;
-  --shadow-1: 0 1px 2px rgb(30 36 32 / 0.06), 0 4px 12px rgb(30 36 32 / 0.06);
-  --shadow-2: 0 8px 32px rgb(30 36 32 / 0.14);
+  --shadow-1: 0 1px 2px rgb(54 34 42 / 0.06), 0 4px 12px rgb(54 34 42 / 0.08);
+  --shadow-2: 0 8px 32px rgb(54 34 42 / 0.16);
 
   /* Motion: ROYA curves, ZU duration ladder. Transform and opacity only. */
   --dur-micro: 120ms;
@@ -79,6 +97,9 @@
   --press: 0.98;
   --arrive: 0.97;
   --travel: 24px;
+
+  --grid-size: 24px;
+  --gingham: 16px;
 
   /* Layers */
   --z-header: 40;

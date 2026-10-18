@@ -17,27 +17,9 @@
   var page = document.body.getAttribute('data-page');
   var params = new URLSearchParams(location.search);
 
-  /* ---------- Art: a bouquet drawn on a golden-angle spiral, so no photo is needed ---------- */
-  function art(p, view) {
-    var cx = 200, cy = view === 'close' ? 230 : 205, scale = view === 'close' ? 1.35 : 1, n = p.blooms, out = [];
-    var gold = 137.508 * Math.PI / 180, spread = (view === 'close' ? 20 : 17) - n * 0.25;
-    var wash = p.colors[0];
-    out.push('<svg class="art" viewBox="0 0 400 500" role="img" aria-label="' + esc(p.name) + ', illustrated" xmlns="http://www.w3.org/2000/svg">');
-    out.push('<rect width="400" height="500" fill="#EFE7DC"/><circle cx="200" cy="215" r="170" fill="' + wash + '" opacity="0.22"/>');
-    if (view !== 'close') {
-      for (var s = 0; s < 7; s++) { var x = 150 + s * 16.7; out.push('<path d="M' + x + ' 300 Q' + (x + (s - 3) * 3) + ' 380 ' + (176 + s * 8) + ' 470" stroke="#5E7A5E" stroke-width="3" fill="none" stroke-linecap="round"/>'); }
-      out.push('<path d="M118 330 L282 330 L228 478 L172 478 Z" fill="#E4D6BF"/><path d="M118 330 L200 352 L282 330 L262 372 L200 392 L138 372 Z" fill="#F7F2EB" opacity="0.85"/><path d="M200 352 L200 392" stroke="#C9B89C" stroke-width="1.5"/>');
-    }
-    for (var l = 0; l < 7; l++) { var a = (l / 7) * 360 - 150; out.push('<ellipse cx="' + (cx + Math.cos((a) * Math.PI / 180) * 96 * scale) + '" cy="' + (cy + 40 + Math.sin(a * Math.PI / 180) * 70 * scale) + '" rx="' + (26 * scale) + '" ry="' + (9 * scale) + '" transform="rotate(' + (a + 90) + ' ' + (cx + Math.cos(a * Math.PI / 180) * 96 * scale) + ' ' + (cy + 40 + Math.sin(a * Math.PI / 180) * 70 * scale) + ')" fill="#6E8F6A" opacity="0.9"/>'); }
-    for (var i = n - 1; i >= 0; i--) {
-      var r = spread * Math.sqrt(i + 0.6) * 3.2 * scale, th = i * gold;
-      var bx = cx + r * Math.cos(th), by = cy + r * Math.sin(th) * 0.82, size = (22 - i * 0.55) * scale, col = p.colors[i % p.colors.length];
-      var petals = 5 + (i % 3);
-      for (var k = 0; k < petals; k++) { var rot = (360 / petals) * k + i * 17; out.push('<ellipse cx="' + bx.toFixed(1) + '" cy="' + (by - size * 0.55).toFixed(1) + '" rx="' + (size * 0.46).toFixed(1) + '" ry="' + (size * 0.7).toFixed(1) + '" transform="rotate(' + rot + ' ' + bx.toFixed(1) + ' ' + by.toFixed(1) + ')" fill="' + col + '" stroke="#1E2420" stroke-opacity="0.12" stroke-width="1"/>'); }
-      out.push('<circle cx="' + bx.toFixed(1) + '" cy="' + by.toFixed(1) + '" r="' + (size * 0.26).toFixed(1) + '" fill="#F2C14E" fill-opacity="0.9"/>');
-    }
-    out.push('</svg>');
-    return out.join('');
+  /* ---------- Photos: URB's own product photos; "close" is a crop of the same file ---------- */
+  function art(p, view, eager) {
+    return '<img class="art' + (view === 'close' ? ' art--zoom' : '') + '" src="' + p.img + '" alt="' + esc(p.name) + ', crocheted bouquet" width="900" height="1125" decoding="async"' + (eager ? '' : ' loading="lazy"') + '>';
   }
 
   /* ---------- Cart maths (display only: this is a demo) ---------- */
@@ -71,14 +53,15 @@
     close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
   };
+  var STAR = '<svg class="star" viewBox="0 0 72 72" aria-hidden="true"><path d="M36 6l7 22 23 2-18 14 6 22-18-13-19 12 7-22L5 29l23-1z"/></svg>';
   var NAV = [['shop.html', 'Shop'], ['about.html', 'Our story'], ['delivery.html', 'Delivery & care'], ['track.html', 'Track order'], ['contact.html', 'Contact']];
   function chrome() {
     var cur = location.pathname.split('/').pop() || 'index.html';
     var nav = NAV.map(function (n) { return '<a href="' + n[0] + '"' + (cur === n[0] ? ' aria-current="page"' : '') + '>' + n[1] + '</a>'; }).join('');
     var h = '<a class="skip" href="#main">Skip to content</a>' +
-      '<header class="header"><div class="header__in container">' +
+      '<div class="promo-bar gingham"><span>Handmade crochet bouquets \u00B7 they never wilt</span></div><header class="header"><div class="header__in container">' +
       '<button class="icon-btn header__menu" data-action="open-menu" aria-label="Open menu">' + icon.menu + '</button>' +
-      '<a class="logo" href="index.html" aria-label="URB home">URB</a>' +
+      '<a class="logo" href="index.html" aria-label="URB home"><img class="logo__img" src="assets/logo.png" alt="URB" width="640" height="273"></a>' +
       '<nav class="header__nav" aria-label="Main">' + nav + '</nav>' +
       '<div class="header__tools">' +
       '<button class="icon-btn" data-action="open-search" aria-label="Search">' + icon.search + '</button>' +
@@ -87,7 +70,7 @@
       '</div></div></header>';
     document.body.insertAdjacentHTML('afterbegin', h);
     var f = '<footer class="footer"><div class="container footer__grid">' +
-      '<div class="footer__brand"><a class="logo logo--on-dark" href="index.html">URB</a><p>Flowers, composed. Hand-tied bouquets, delivered across Pakistan.</p>' +
+      '<div class="footer__brand"><a class="logo logo--on-dark" href="index.html" aria-label="URB home"><img class="logo__img" src="assets/logo-cream.png" alt="URB" width="640" height="273"></a><p>ur beloved. Handmade crochet bouquets that never wilt.</p>' +
       '<form class="newsletter" data-form="newsletter" novalidate><label class="sr" for="nl-email">Email address</label><input id="nl-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required><button class="btn btn--light" type="submit">Join</button><p class="field__error" data-error hidden></p></form></div>' +
       '<div><h2 class="eyebrow">Shop</h2><ul class="list"><li><a href="shop.html">All bouquets</a></li><li><a href="shop.html?cat=roses">Roses</a></li><li><a href="shop.html?cat=lilies">Lilies</a></li><li><a href="shop.html?cat=pastel">Pastel</a></li><li><a href="shop.html?cat=under10">Under Rs 10,000</a></li></ul></div>' +
       '<div><h2 class="eyebrow">Help</h2><ul class="list"><li><a href="delivery.html">Delivery & care</a></li><li><a href="track.html">Track an order</a></li><li><a href="contact.html">Contact</a></li><li><a href="contact.html#custom">Custom bouquet</a></li><li><a href="wishlist.html">Saved bouquets</a></li></ul></div>' +
@@ -95,7 +78,7 @@
       '</div><div class="container footer__base"><p>© 2026 URB. A design demonstration: no real orders are taken.</p><a href="#top">Back to top</a></div></footer>';
     document.body.insertAdjacentHTML('beforeend', f);
     document.body.insertAdjacentHTML('beforeend',
-      '<dialog class="sheet sheet--menu" id="dlg-menu" aria-label="Menu"><div class="sheet__head"><a class="logo" href="index.html">URB</a><button class="icon-btn" data-action="close" aria-label="Close menu">' + icon.close + '</button></div><nav class="menu" aria-label="Mobile">' + [['index.html', 'Home']].concat(NAV).concat([['wishlist.html', 'Saved']]).map(function (n) { return '<a href="' + n[0] + '">' + n[1] + '</a>'; }).join('') + '</nav></dialog>' +
+      '<dialog class="sheet sheet--menu" id="dlg-menu" aria-label="Menu"><div class="sheet__head"><a class="logo" href="index.html" aria-label="URB home"><img class="logo__img" src="assets/logo.png" alt="URB" width="640" height="273"></a><button class="icon-btn" data-action="close" aria-label="Close menu">' + icon.close + '</button></div><nav class="menu" aria-label="Mobile">' + [['index.html', 'Home']].concat(NAV).concat([['wishlist.html', 'Saved']]).map(function (n) { return '<a href="' + n[0] + '">' + n[1] + '</a>'; }).join('') + '</nav></dialog>' +
       '<dialog class="sheet sheet--search" id="dlg-search" aria-label="Search"><div class="sheet__head"><label class="sr" for="q">Search bouquets</label><input id="q" class="search__input" type="search" placeholder="Search by name or flower" autocomplete="off"><button class="icon-btn" data-action="close" aria-label="Close search">' + icon.close + '</button></div><div class="search__out" id="search-out" aria-live="polite"></div></dialog>' +
       '<dialog class="sheet sheet--cart" id="dlg-cart" aria-label="Your bag"><div class="sheet__head"><h2 class="sheet__title">Your bag</h2><button class="icon-btn" data-action="close" aria-label="Close bag">' + icon.close + '</button></div><div class="sheet__body" id="cart-body"></div></dialog>' +
       '<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>');
@@ -122,7 +105,7 @@
   }
   function renderCartSheet() {
     var t = totals(), b = $('#cart-body');
-    if (!t.ls.length) { b.innerHTML = empty('Your bag is empty', 'Every bouquet is tied by hand, one at a time.', 'shop.html', 'Browse bouquets'); return; }
+    if (!t.ls.length) { b.innerHTML = empty('Your bag is empty', 'Every bouquet is crocheted by hand, one stem at a time.', 'shop.html', 'Browse bouquets'); return; }
     b.innerHTML = '<ul class="lines">' + cartLines(true) + '</ul><div class="sheet__foot"><p class="row"><span>Subtotal</span><bdi dir="ltr">' + fmt(t.sub) + '</bdi></p><p class="note">Delivery and promo code are added at checkout.</p><a class="btn btn--ink btn--block" href="checkout.html">Checkout</a><a class="btn btn--line btn--block" href="cart.html">View full bag</a></div>';
   }
 
@@ -150,7 +133,7 @@
   function mountHome() {
     $('#feat').innerHTML = PRODUCTS.filter(function (p) { return ['white-muse', 'pink-whimsy', 'peony-grace', 'rose-amour'].indexOf(p.id) > -1; }).map(card).join('');
     $('#occ').innerHTML = D.occasions.map(function (o, i) { return '<a class="occ" data-reveal href="shop.html?occ=' + o.id + '"><span class="occ__n">0' + (i + 1) + '</span><span class="occ__l">' + o.label + '</span><span class="occ__a">' + icon.arrow + '</span></a>'; }).join('');
-    $('#hero-art').innerHTML = art(byId('peony-grace'));
+    $('#hero-art').innerHTML = art(byId('rose-amour'), 'full', true) + STAR;
   }
   function mountShop() {
     var st = { cat: params.get('cat') || 'all', occ: params.get('occ') || '', q: params.get('q') || '', sort: 'featured' };
@@ -189,7 +172,7 @@
       '<div class="buy__row"><div class="qty qty--lg" role="group" aria-label="Quantity"><button type="button" class="qty__b" data-action="pdp-dec" aria-label="Decrease">−</button><output class="qty__n" id="pq">1</output><button type="button" class="qty__b" data-action="pdp-inc" aria-label="Increase">+</button></div><button class="btn btn--ink btn--grow" type="submit" data-intent="add">Add to bag</button></div>' +
       '<button class="btn btn--line btn--block" type="submit" data-intent="buy">Buy now</button>' +
       '<button class="btn btn--text btn--block" type="button" data-action="wish" data-id="' + p.id + '" aria-pressed="' + saved + '">' + icon.heart + '<span data-wish-label>' + (saved ? 'Saved' : 'Save for later') + '</span></button></form>' +
-      '<div class="acc"><details><summary>Delivery</summary><p>Delivery is <bdi dir="ltr">' + fmt(p.fee) + '</bdi> for this bouquet. Orders are tied the same day and travel upright in a water-fed box. <a href="delivery.html">Full delivery details</a>.</p></details><details><summary>Care</summary><p>Trim the stems at an angle, use cool clean water, and keep away from sun and fruit. <a href="delivery.html#care">Care guide</a>.</p></details><details><summary>Substitutions</summary><p>Blooms are seasonal. If a stem is unavailable we swap for the same colour and shape, never a lesser one.</p></details></div></div>';
+      '<div class="acc"><details><summary>Delivery</summary><p>Delivery is <bdi dir="ltr">' + fmt(p.fee) + '</bdi> for this bouquet. Each bouquet is wrapped and ribboned, then packed to arrive upright. <a href="delivery.html">Full delivery details</a>.</p></details><details><summary>Care</summary><p>Crochet never wilts and needs no water. Keep it dry and out of direct sun, and dust it with a soft brush. <a href="delivery.html#care">Care guide</a>.</p></details><details><summary>Made by hand</summary><p>Each stem is crocheted by hand, so small differences in shape or yarn shade are part of the piece. Ask us about colour changes on the <a href="contact.html#custom">custom bouquet form</a>.</p></details></div></div>';
     var qty = 1;
     root.addEventListener('click', function (e) {
       var v = e.target.closest('[data-view]'); if (v) { $('#pdp-main').innerHTML = art(p, v.getAttribute('data-view')); $$('.thumb').forEach(function (t) { t.setAttribute('aria-pressed', t === v); }); }
@@ -264,10 +247,10 @@
   function mountConfirmed() {
     var o = findOrder(params.get('o')), r = $('#done');
     if (!o) { r.innerHTML = empty('We could not find that order', 'Orders live in this browser. Check the number, or track it by order number.', 'track.html', 'Track an order'); return; }
-    r.innerHTML = '<p class="eyebrow">Order placed</p><h1 class="h1">Thank you, ' + esc(o.name.split(' ')[0]) + '.</h1><p class="lede">Your order number is <strong>' + o.id + '</strong>. We will tie your bouquet on ' + esc(o.date) + ' and message you when it leaves.</p><div class="panel"><ul class="lines lines--ro">' + o.items.map(function (i) { var p = byId(i.id); return '<li class="line"><span class="line__img">' + (p ? art(p) : '') + '</span><div class="line__main"><p class="line__name">' + esc(i.name) + '</p><p class="line__meta">Qty ' + i.qty + '</p></div><bdi dir="ltr" class="line__total">' + fmt(i.price * i.qty) + '</bdi></li>'; }).join('') + '</ul><dl class="sum"><div><dt>Delivery</dt><dd><bdi dir="ltr">' + fmt(o.fee) + '</bdi></dd></div><div class="sum__total"><dt>Total</dt><dd><bdi dir="ltr">' + fmt(o.total) + '</bdi></dd></div></dl><p class="note">Payment: ' + ({ cod: 'Cash on delivery', bank: 'Bank transfer (details sent by message)', card: 'Card (link sent by message)' }[o.pay] || o.pay) + '</p></div><div class="actions"><a class="btn btn--ink" href="track.html?o=' + o.id + '">Track this order</a><a class="btn btn--line" href="shop.html">Keep browsing</a></div>';
+    r.innerHTML = '<p class="eyebrow">Order placed</p><h1 class="h1">Thank you, ' + esc(o.name.split(' ')[0]) + '.</h1><p class="lede">Your order number is <strong>' + o.id + '</strong>. We will deliver your bouquet on ' + esc(o.date) + ' and message you when it leaves.</p><div class="panel"><ul class="lines lines--ro">' + o.items.map(function (i) { var p = byId(i.id); return '<li class="line"><span class="line__img">' + (p ? art(p) : '') + '</span><div class="line__main"><p class="line__name">' + esc(i.name) + '</p><p class="line__meta">Qty ' + i.qty + '</p></div><bdi dir="ltr" class="line__total">' + fmt(i.price * i.qty) + '</bdi></li>'; }).join('') + '</ul><dl class="sum"><div><dt>Delivery</dt><dd><bdi dir="ltr">' + fmt(o.fee) + '</bdi></dd></div><div class="sum__total"><dt>Total</dt><dd><bdi dir="ltr">' + fmt(o.total) + '</bdi></dd></div></dl><p class="note">Payment: ' + ({ cod: 'Cash on delivery', bank: 'Bank transfer (details sent by message)', card: 'Card (link sent by message)' }[o.pay] || o.pay) + '</p></div><div class="actions"><a class="btn btn--ink" href="track.html?o=' + o.id + '">Track this order</a><a class="btn btn--line" href="shop.html">Keep browsing</a></div>';
   }
   function mountTrack() {
-    var form = $('#track'), out = $('#track-out'), steps = ['Order received', 'Flowers selected', 'Tied by hand', 'Out for delivery', 'Delivered'];
+    var form = $('#track'), out = $('#track-out'), steps = ['Order received', 'Bouquet checked', 'Wrapped and ribboned', 'Out for delivery', 'Delivered'];
     function show(id) {
       var o = findOrder(id), stage;
       if (o) stage = Math.min(4, Math.floor((Date.now() - o.at) / 6e4 / 2) + 1); else if (/^URB-\d{6}$/i.test(id)) stage = 3; else { out.innerHTML = empty('No order with that number', 'Order numbers look like URB-123456. You can also try a demo order.', 'track.html?o=URB-100000', 'Try a demo order'); return; }

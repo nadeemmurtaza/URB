@@ -13,11 +13,12 @@ Source of truth: `css/tokens.css` (mirror for tools: `css/tokens.json`). Nothing
 
 ## Tokens
 
-- **Colour:** paper `#F7F2EB`, paper-sunk `#EFE7DC`, card `#FFFDF9`, ink `#1E2420`, ink-2 `#4A524B`, ink-3 `#5F665F` (all body text >= 4.5:1 on paper), rose `#B8626E`, rose-deep `#8F3F4B` (small text and sale tags), blush `#EBCFCB`, sage `#7F9482`, forget-me-not `#8EA7D8`, forest `#1F2B25`. The palette is derived from the flowers URB sells (peony pink, forget-me-not blue, leaf green) and is a proposal until the real logo arrives.
-- **Type:** Cormorant Garamond (display), Manrope (text). Scale ratio 1.25 on phones, 1.333 from 768, fluid via `clamp()`. Body 16px / 1.6.
+- **Colour (measured from URB's logo and cover):** brand mauve `#AC6579` (logo), olive `#889440` (the "eloved" tag), cream `#F9EFDE` (cover paper, page background), script rose `#C44058` (cover lettering), burgundy `#89424B` (cover stars), gingham taupe `#D5CFCA` / `#B8A79D`. Derived: mauve-deep `#8A4A5C` for buttons and small text (white on it is above 4.5:1; the raw logo mauve is about 4:1, so it is used for large shapes and decoration), olive-deep `#5F6B26`, wine `#4A2530` for dark bands, ink `#36222A`.
+- **Brand pieces reused from the cover:** gingham band (promo bar), grid paper (hero), brush-script accent word (one per page), hand-drawn star. The logo is the real artwork; a cream version is used on the wine footer.
+- **Type:** Fredoka (headings, echoes the rounded logo), Nunito (text), Yellowtail (script accent). Scale ratio 1.25 on phones, 1.333 from 768. Body 16px / 1.6.
 - **Space:** 4 · 8 · 16 · 24 · 32 · 48 · 64 · 96. Gutter 20 / 40 / 56. Section rhythm `clamp(64px, 12vw, 128px)`.
 - **Shape:** radius 4 / 12 / 24 / pill. Image aspect 4:5 everywhere. Tap target 48px.
-- **Geometry:** hero, product, cart, story and footer split on the **golden ratio (1.618 : 1)**; bouquet art places blooms on a **golden-angle (137.5°) spiral**.
+- **Geometry:** hero, product, cart, story and footer split on the **golden ratio (1.618 : 1)**; photos sit in a 4:5 frame throughout.
 - **Motion:** reveal = 24px rise + fade over 560ms `settle`, staggered 80ms for the first four children only; hover lift/zoom 560ms; press scale 0.98; sheets rise/slide 560ms. Under `prefers-reduced-motion` all durations and distances become 0 and content is simply visible.
 
 ## Laws applied
