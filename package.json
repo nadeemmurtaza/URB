@@ -4,6 +4,13 @@
   "scripts": {
     "dev": "npx http-server -p 4173 .",
     "verify": "node scripts/verify.mjs",
-    "deploy": "npx wrangler deploy"
+    "deploy": "npx wrangler deploy",
+    "admin:sync": "node scripts/sync-library.mjs ../library",
+    "admin:css": "tailwindcss -i admin/styles/admin.src.css -o admin/admin.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.3.3",
+    "@tailwindcss/cli": "^4.3.3",
+    "daisyui": "^5.7.50"
   }
 }

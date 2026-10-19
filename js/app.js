@@ -39,14 +39,21 @@
 
   /* ---------- Cart maths (display only: this is a demo) ---------- */
   function lines() { return getCart().map(function (l) { var p = byId(l.id); return p ? { p: p, qty: l.qty } : null; }).filter(Boolean); }
+  /* Promo codes come from the back office once it has been opened; before that, the built-in one. */
+  function promoList() { var p = D.db.read('promos'); return D.db.seeded('promos') && Array.isArray(p) ? p : [D.promo]; }
+  function findPromo(code) {
+    code = String(code || '').trim().toUpperCase(); var today = new Date().toISOString().slice(0, 10);
+    return promoList().filter(function (p) { return String(p.code).toUpperCase() === code && p.active !== false && (!p.expires || p.expires >= today) && (!p.limit || (p.used || 0) < p.limit); })[0] || null;
+  }
   function totals() {
     var ls = lines(), sub = 0, fee = 0, count = 0, was = 0;
     ls.forEach(function (l) { sub += l.p.price * l.qty; was += (l.p.was || l.p.price) * l.qty; count += l.qty; fee = Math.max(fee, l.p.fee); });
-    var promo = read('urb.promo', null), disc = promo ? Math.round(sub * D.promo.pct / 100) : 0;
-    return { ls: ls, sub: sub, fee: ls.length ? fee : 0, count: count, saved: was - sub, disc: disc, total: sub - disc + (ls.length ? fee : 0), promo: !!promo };
+    var promo = findPromo(read('urb.promo', null)), disc = promo ? Math.round(sub * promo.pct / 100) : 0;
+    return { ls: ls, sub: sub, fee: ls.length ? fee : 0, count: count, saved: was - sub, disc: disc, total: sub - disc + (ls.length ? fee : 0), promo: !!promo, promoCode: promo ? promo.code : '', promoPct: promo ? promo.pct : 0 };
   }
   function addToCart(id, qty) {
     var p = byId(id); if (!p) return;
+    if (p.stock <= 0) { toast(p.name + ' is sold out.'); return; }
     var c = getCart().slice(), l = c.filter(function (x) { return x.id === id; })[0];
     var next = Math.min(p.stock, (l ? l.qty : 0) + (qty || 1));
     if (l && l.qty >= p.stock) { toast('That is all we have of ' + p.name + '.'); return; }
@@ -57,7 +64,7 @@
     var p = byId(id), c = getCart().map(function (l) { return l.id === id ? { id: id, qty: Math.max(0, Math.min(q, p.stock)) } : l; }).filter(function (l) { return l.qty > 0; });
     setCart(c);
   }
-  function stockNote(p) { return p.stock === 1 ? 'Only 1 left' : p.stock <= 3 ? 'Only ' + p.stock + ' left' : 'In stock'; }
+  function stockNote(p) { return p.stock <= 0 ? 'Sold out' : p.stock === 1 ? 'Only 1 left' : p.stock <= 3 ? 'Only ' + p.stock + ' left' : 'In stock'; }
 
   /* ---------- Shared chrome ---------- */
   var icon = {
@@ -104,10 +111,10 @@
 
   function card(p, i) {
     var saved = getWish().indexOf(p.id) > -1;
-    return '<article class="card" data-reveal><a class="card__media" href="product.html?id=' + p.id + '" aria-label="' + esc(p.name) + '">' + art(p) + (p.was ? '<span class="tag">−10%</span>' : '') + (p.stock === 1 ? '<span class="tag tag--low">last one!</span>' : '') + '</a>' +
+    return '<article class="card" data-reveal><a class="card__media" href="product.html?id=' + p.id + '" aria-label="' + esc(p.name) + '">' + art(p) + (p.was ? '<span class="tag">−10%</span>' : '') + (p.stock <= 0 ? '<span class="tag tag--low tag--out">sold out</span>' : p.stock === 1 ? '<span class="tag tag--low">last one!</span>' : '') + '</a>' +
       '<button class="card__save icon-btn" data-action="wish" data-id="' + p.id + '" aria-pressed="' + saved + '" aria-label="' + (saved ? 'Remove ' : 'Save ') + esc(p.name) + (saved ? ' from saved' : ' to saved') + '">' + icon.heart + '</button>' +
       '<div class="card__body"><h3 class="card__name"><a href="product.html?id=' + p.id + '">' + esc(p.name) + '</a></h3><p class="price"><bdi dir="ltr"><span class="price__now">' + fmt(p.price) + '</span>' + (p.was ? ' <s class="price__was">' + fmt(p.was) + '</s>' : '') + '</bdi></p>' +
-      '<button class="btn btn--line btn--block" data-action="add" data-id="' + p.id + '">Add to bag</button></div></article>';
+      '<button class="btn btn--line btn--block" data-action="add" data-id="' + p.id + '"' + (p.stock <= 0 ? ' disabled' : '') + '>' + (p.stock <= 0 ? 'Sold out' : 'Add to bag') + '</button></div></article>';
   }
   var empty = function (t, d, href, label) { return '<div class="empty"><h2 class="empty__t">' + t + '</h2><p>' + d + '</p><a class="btn btn--ink" href="' + href + '">' + label + '</a></div>'; };
 
@@ -211,6 +218,7 @@
       '<button class="btn btn--line btn--block" type="submit" data-intent="buy">Buy now</button>' +
       '<button class="btn btn--text btn--block" type="button" data-action="wish" data-id="' + p.id + '" aria-pressed="' + saved + '">' + icon.heart + '<span data-wish-label>' + (saved ? 'Saved' : 'Save for later') + '</span></button></form>' +
       '<div class="acc"><details><summary>Delivery</summary><p>Delivery is <bdi dir="ltr">' + fmt(p.fee) + '</bdi> for this bouquet. Each bouquet is wrapped and ribboned, then packed to arrive upright. <a href="delivery.html">Full delivery details</a>.</p></details><details><summary>Care</summary><p>Crochet never wilts and needs no water. Keep it dry and out of direct sun, and dust it with a soft brush. <a href="delivery.html#care">Care guide</a>.</p></details><details><summary>Made by hand</summary><p>Each stem is crocheted by hand, so small differences in shape or yarn shade are part of the piece. Ask us about colour changes on the <a href="contact.html#custom">custom bouquet form</a>.</p></details></div></div>';
+    if (p.stock <= 0) { $$('#buy [type="submit"]').forEach(function (b) { b.disabled = true; }); }
     var qty = 1;
     root.addEventListener('click', function (e) {
       var v = e.target.closest('[data-view]'); if (v) { var nt = $('.pdp__notes', $('#pdp-main')); $('#pdp-main').innerHTML = art(p, v.getAttribute('data-view'), true) + (nt ? nt.outerHTML : ''); $('.pdp__notes', $('#pdp-main')).hidden = v.getAttribute('data-view') === 'photo'; $$('.thumb').forEach(function (t) { t.setAttribute('aria-pressed', t === v); }); }
@@ -231,13 +239,15 @@
     });
     $('#related').innerHTML = PRODUCTS.filter(function (x) { return x.id !== p.id && x.tags.some(function (t) { return p.tags.indexOf(t) > -1; }); }).slice(0, 4).map(card).join('');
     $('#sticky-name').textContent = p.name; $('#sticky-price').textContent = fmt(p.price);
+    if (p.stock <= 0) { $('#sticky-add').disabled = true; $('#sticky-add').textContent = 'Sold out'; }
     $('#sticky-add').addEventListener('click', function () { $('#buy').requestSubmit($('#buy [data-intent="add"]')); });
   }
   function summaryHTML(t, withLines) {
-    return (withLines === false ? '' : '<ul class="lines lines--ro">' + cartLines(false) + '</ul>') + '<dl class="sum"><div><dt>Subtotal</dt><dd><bdi dir="ltr">' + fmt(t.sub) + '</bdi></dd></div>' + (t.disc ? '<div><dt>Promo ' + D.promo.code + '</dt><dd><bdi dir="ltr">−' + fmt(t.disc) + '</bdi></dd></div>' : '') + '<div><dt>Delivery</dt><dd><bdi dir="ltr">' + fmt(t.fee) + '</bdi></dd></div><div class="sum__total"><dt>Total</dt><dd><bdi dir="ltr">' + fmt(t.total) + '</bdi></dd></div></dl>' + (t.saved ? '<p class="note note--ok">You are saving ' + fmt(t.saved) + ' on this bag.</p>' : '');
+    return (withLines === false ? '' : '<ul class="lines lines--ro">' + cartLines(false) + '</ul>') + '<dl class="sum"><div><dt>Subtotal</dt><dd><bdi dir="ltr">' + fmt(t.sub) + '</bdi></dd></div>' + (t.disc ? '<div><dt>Promo ' + t.promoCode + '</dt><dd><bdi dir="ltr">−' + fmt(t.disc) + '</bdi></dd></div>' : '') + '<div><dt>Delivery</dt><dd><bdi dir="ltr">' + fmt(t.fee) + '</bdi></dd></div><div class="sum__total"><dt>Total</dt><dd><bdi dir="ltr">' + fmt(t.total) + '</bdi></dd></div></dl>' + (t.saved ? '<p class="note note--ok">You are saving ' + fmt(t.saved) + ' on this bag.</p>' : '');
   }
+  function hintPromo() { return promoList().filter(function (p) { return p.active !== false && findPromo(p.code); })[0]; }
   function promoForm(t) {
-    return '<form class="promo" data-form="promo" novalidate><label for="promo-in">Promo code</label><div class="promo__row"><input id="promo-in" name="code" autocomplete="off" placeholder="' + D.promo.code + '"' + (t.promo ? ' value="' + D.promo.code + '" readonly' : '') + '><button class="btn btn--line" type="submit">' + (t.promo ? 'Remove' : 'Apply') + '</button></div><p class="field__error" data-error hidden></p><p class="field__hint">Try ' + D.promo.code + ' for ' + D.promo.pct + '% off.</p></form>';
+    return '<form class="promo" data-form="promo" novalidate><label for="promo-in">Promo code</label><div class="promo__row"><input id="promo-in" name="code" autocomplete="off" placeholder="Enter a code"' + (t.promo ? ' value="' + t.promoCode + '" readonly' : '') + '><button class="btn btn--line" type="submit">' + (t.promo ? 'Remove' : 'Apply') + '</button></div><p class="field__error" data-error hidden></p>' + (hintPromo() ? '<p class="field__hint">Try ' + hintPromo().code + ' for ' + hintPromo().pct + '% off.</p>' : '') + '</form>';
   }
   function renderCartPage() {
     var t = totals(), r = $('#cart-root');
@@ -274,6 +284,16 @@
       var t = totals(); if (!t.ls.length) return;
       var id = 'URB-' + (100000 + Math.floor(Math.random() * 899999)), o = { id: id, at: Date.now(), name: f.elements.name.value.trim(), phone: f.elements.phone.value, city: f.elements.city.value, address: f.elements.address.value.trim(), date: f.elements.date.value, slot: f.elements.slot.value, pay: f.elements.pay.value, msg: f.elements.msg.value, items: t.ls.map(function (l) { return { id: l.p.id, name: l.p.name, qty: l.qty, price: l.p.price }; }), sub: t.sub, disc: t.disc, fee: t.fee, total: t.total };
       var orders = read('urb.orders', []); orders.unshift(o); write('urb.orders', orders);
+      /* The same order, in the back office's shape, so it shows up in admin/ straight away. */
+      var now = o.at, dbo = read('urb.db.orders', []);
+      dbo.unshift({ id: o.id, at: now, createdAt: now, status: 'new', payment: 'unpaid', pay: o.pay, customer: { name: o.name, phone: o.phone, email: f.elements.email.value.trim(), city: o.city, address: o.address }, items: o.items, sub: t.sub, disc: t.disc, fee: t.fee, total: t.total, date: o.date, slot: o.slot, msg: o.msg, notes: [], history: [{ at: now, status: 'new', by: 'storefront' }], source: 'storefront' });
+      write('urb.db.orders', dbo);
+      if (D.db.seeded('products')) {
+        var dbp = read('urb.db.products', []), mv = read('urb.db.stockmoves', []);
+        o.items.forEach(function (i) { dbp.forEach(function (p) { if (p.id === i.id) { var n = Math.max(0, (p.stock || 0) - i.qty); mv.unshift({ id: 'sm_' + now.toString(36) + i.id, at: now, productId: p.id, name: p.name, delta: n - (p.stock || 0), reason: 'Order ' + o.id, by: 'storefront' }); p.stock = n; } }); });
+        write('urb.db.products', dbp); write('urb.db.stockmoves', mv);
+      }
+      if (t.promoCode && D.db.seeded('promos')) { write('urb.db.promos', read('urb.db.promos', []).map(function (p) { return String(p.code).toUpperCase() === t.promoCode ? Object.assign({}, p, { used: (p.used || 0) + 1 }) : p; })); }
       write('urb.profile', { name: o.name, phone: o.phone, email: f.elements.email.value, city: o.city, address: o.address });
       setCart([]); try { localStorage.removeItem('urb.promo'); localStorage.removeItem('urb.prefill'); } catch (x) { /* noop */ }
       location.href = 'order-confirmed.html?o=' + id;
@@ -324,10 +344,14 @@
     var f = e.target.closest('[data-form]'); if (!f) return; e.preventDefault();
     var kind = f.getAttribute('data-form'), er = $('[data-error]', f);
     if (kind === 'newsletter') { var v = f.elements.email.value; if (!/^\S+@\S+\.\S+$/.test(v)) { er.textContent = 'Enter a valid email.'; er.hidden = false; return; } er.hidden = true; f.reset(); toast('You are on the list. Welcome.'); }
-    if (kind === 'promo') { if (read('urb.promo', null)) { try { localStorage.removeItem('urb.promo'); } catch (x) { /* noop */ } sync(); toast('Promo removed.'); return; } var c = f.elements.code.value.trim().toUpperCase(); if (c !== D.promo.code) { er.textContent = 'That code is not valid. Try ' + D.promo.code + '.'; er.hidden = false; return; } write('urb.promo', c); sync(); toast(D.promo.pct + '% off applied.'); }
+    if (kind === 'promo') { if (read('urb.promo', null)) { try { localStorage.removeItem('urb.promo'); } catch (x) { /* noop */ } sync(); toast('Promo removed.'); return; } var pr = findPromo(f.elements.code.value); if (!pr) { er.textContent = 'That code is not valid or has expired.'; er.hidden = false; return; } write('urb.promo', pr.code); sync(); toast(pr.pct + '% off applied.'); }
     if (kind === 'contact' || kind === 'custom') {
       var bad = null; $$('[required]', f).forEach(function (el) { var ok = el.value.trim() && (el.type !== 'email' || /^\S+@\S+\.\S+$/.test(el.value)); var m = $('[data-for="' + el.name + '"]', f); if (m) { m.hidden = !!ok; } if (!ok) { el.setAttribute('aria-invalid', 'true'); bad = bad || el; } else el.removeAttribute('aria-invalid'); });
       if (bad) { bad.focus(); return; }
+      var fe = f.elements, enq = { id: 'enq_' + Date.now().toString(36), at: Date.now(), createdAt: Date.now(), name: fe.name.value.trim(), status: 'new', source: 'storefront' };
+      if (kind === 'contact') { enq.email = fe.email.value.trim(); enq.brief = fe.msg.value.trim(); enq.occasion = 'General'; }
+      else { var ct = fe.contact.value.trim(); if (/@/.test(ct)) enq.email = ct; else enq.phone = ct; enq.occasion = fe.occ.value; enq.brief = fe.brief.value.trim(); if (params.get('item')) enq.item = params.get('item'); }
+      var eq = read('urb.db.enquiries', []); eq.unshift(enq); write('urb.db.enquiries', eq);
       f.hidden = true; $('[data-done="' + kind + '"]').hidden = false; $('[data-done="' + kind + '"]').focus();
     }
   });

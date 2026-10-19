@@ -667,3 +667,6 @@ main { overflow-x: clip; }
   .hero__note--3 { inset-block-end: -6%; inset-inline-start: 4%; }
   .hero__note--2 { inset-block-start: 0; inset-inline-end: 0; }
 }
+
+.tag--out { background: var(--ink-3); }
+.btn[disabled] { opacity: 0.45; pointer-events: none; }

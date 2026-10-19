@@ -66,7 +66,29 @@ window.URB_DATA = (function () {
       ] }
   ];
   var cities = ['Islamabad', 'Rawalpindi', 'Lahore', 'Karachi', 'Peshawar', 'Faisalabad', 'Multan', 'Another city'];
-  return { products: products, collections: collections, occasions: occasions, cats: cats, cities: cities,
+  /* The back office (admin/) owns the catalogue once it has been opened: the same browser storage, namespaced urb.db.*.
+     Until then, and whenever storage is unavailable, the lists above are used as they are. */
+  var defaults = { products: products.slice(), collections: JSON.parse(JSON.stringify(collections)) };
+  var dbRead = function (k) { try { return JSON.parse(localStorage.getItem('urb.db.' + k)); } catch (e) { return null; } };
+  var dbSeeded = function (k) { try { return localStorage.getItem('urb.db.' + k + '.seeded') === 'true'; } catch (e) { return false; } };
+  var promoDefault = { code: 'WELCOME5', pct: 5 };
+  (function () {
+    var dp = dbRead('products');
+    if (dbSeeded('products') && Array.isArray(dp)) {
+      products = dp.filter(function (p) { return p.active !== false; }).map(function (p) {
+        return { id: p.id, name: p.name, price: +p.price || 0, was: +p.was || 0, stock: Math.max(0, +p.stock || 0), fee: +p.fee || 0, inside: p.inside || [], tags: p.tags || [], occ: p.occ || [], line: p.line || '', photo: p.photo || p.img, soft: !!p.soft, img: p.img };
+      });
+    }
+    var di = dbRead('items');
+    if (dbSeeded('items') && Array.isArray(di)) {
+      collections = collections.map(function (c) {
+        return { id: c.id, label: c.label, title: c.title, lede: c.lede, items: di.filter(function (i) { return i.collection === c.id && i.active !== false; }).map(function (i) { return { id: i.id, name: i.name, img: i.img, soft: !!i.soft, facts: i.facts || [], colors: i.colors || [], note: i.note || '' }; }) };
+      });
+    }
+    var st = dbRead('settings');
+    if (Array.isArray(st) && st[0] && Array.isArray(st[0].cities) && st[0].cities.length) cities = st[0].cities;
+  })();
+  return { defaults: defaults, db: { read: dbRead, seeded: dbSeeded }, products: products, collections: collections, occasions: occasions, cats: cats, cities: cities,
     brand: { name: 'URB', tagline: 'ur beloved', box: 'assets/photos/box.webp', maker: 'assets/photos/maker.webp', instagram: 'https://www.instagram.com/shop.urb', tiktok: 'https://www.tiktok.com/@shop.urb', pluto: 'https://plutopakistan.com/stores/urb-394', facebook: 'https://www.facebook.com/share/15Buz3M4xc/' },
-    promo: { code: 'WELCOME5', pct: 5 } };
+    promo: promoDefault };
 })();
