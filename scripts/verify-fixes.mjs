@@ -75,6 +75,21 @@ console.log('\nStaff cannot create orders')
   await o.ctx.close()
 }
 
+console.log('\nRecipes for any product, including made-to-order pieces')
+{
+  const { ctx, page, errs } = await fresh()
+  await page.goto(`${base}/admin/index.html#/bom`); await signIn(page, 'owner'); await page.waitForSelector('.admin-table')
+  await page.fill('[data-q]', 'cardigan'); await page.waitForTimeout(250)
+  ok((await page.$$('.admin-table tbody tr')).length >= 1, 'a made-to-order piece (cardigan) is listed under Recipes')
+  await page.click('.admin-table tbody tr'); await page.waitForSelector('.admin-drawer[open]')
+  ok((await page.textContent('.admin-drawer')).includes('Recipe'), 'its recipe opens')
+  await page.click('.admin-drawer [data-close]'); await page.waitForTimeout(300)
+  await page.fill('[data-q]', 'dill'); await page.waitForTimeout(250)
+  ok((await page.$$('.admin-table tbody tr')).length >= 1, 'a filler stem is listed under Recipes')
+  ok(errs.length === 0, 'no page errors' + (errs.length ? ': ' + errs[0] : ''))
+  await ctx.close()
+}
+
 await browser.close()
 console.log(fails.length ? `\n${fails.length} FAILURE(S)` : '\nALL FIX CHECKS PASSED')
 process.exit(fails.length ? 1 : 0)

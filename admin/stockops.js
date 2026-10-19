@@ -36,10 +36,18 @@ export function restoreOrder(order) {
 
 export const costing = () => { const s = settings(); return { labourRate: s.labourRate, overheadPct: s.overheadPct, target: s.targetMargin } }
 
-/** One row per bouquet: its recipe, what it costs to make and what that does to the margin. */
+/** Anything that can have a recipe: a catalogue product (bouquet, stem, filler) or a made-to-order piece (plushie, wear, little things). */
+export function subject(id) {
+  const p = C.products.get(id); if (p) return { id, name: p.name, img: p.img, price: p.price || 0, type: 'product' }
+  const i = C.items.get(id); return i ? { id, name: i.name, img: i.img, price: i.price || 0, type: 'item' } : null
+}
+export function setSubjectPrice(id, price) { if (C.products.get(id)) C.products.update(id, { price }); else if (C.items.get(id)) C.items.update(id, { price }) }
+
+/** One row per product and per made-to-order piece: its recipe, what it costs to make and what that does to the margin. */
 export function recipeRows() {
   const k = costing(), mats = C.materials.all(), boms = new Map(C.boms.all().map((b) => [b.id, b]))
-  return C.products.all().map((p) => {
+  const all = [...C.products.all().map((p) => ({ id: p.id, name: p.name, img: p.img, price: p.price || 0, type: 'product' })), ...C.items.all().map((i) => ({ id: i.id, name: i.name, img: i.img, price: i.price || 0, type: 'item' }))]
+  return all.map((p) => {
     const bom = boms.get(p.id), has = !!(bom && bom.lines?.length)
     const c = has ? costBom({ bom, materials: mats, labourRate: k.labourRate, overheadPct: k.overheadPct }) : null
     const mg = c ? margin(p.price, c.total) : { amount: 0, pct: null }

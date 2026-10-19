@@ -23,6 +23,7 @@ export function openItem(id) {
     <div class="admin-form__row">${textField('name', 'Name', it.name, { required: true })}${selectField('collection', 'Collection', COLL, it.collection)}</div>
     ${textArea('note', 'Description', it.note, { rows: 3, maxlength: 300 })}
     ${textArea('facts', 'Key facts', (it.facts || []).join('\n'), { rows: 3, hint: 'One per line, like “4 ply yarn” or “2 hour making time”. The first one shows on the card.' })}
+    ${textField('price', 'Typical price (Rs)', it.price || '', { optional: true, hint: 'Not shown on the storefront. Used to work out the margin on its recipe.' })}
     ${textField('colors', 'Available colours', (it.colors || []).join(', '), { optional: true, hint: 'Separate with commas' })}
     ${toggleField('active', 'Visible on the storefront', it.active !== false)}</form>`,
   footer: '<button class="btn btn-ghost" data-close>Cancel</button><button class="btn btn-primary" form="itf" type="submit">Save</button>' })
@@ -34,7 +35,7 @@ export function openItem(id) {
     if (v.note.length > 300) errors.note = 'Keep it under 300 characters.'
     const ie = d.el.querySelector('#img-error'); ie.hidden = !!img; if (!img) ie.textContent = 'Add a picture so shoppers can see it.'
     if (Object.keys(errors).length || !img) return showErrors(form, errors)
-    const rec = { collection: v.collection, name: v.name.trim(), note: v.note.trim(), facts: v.facts.split('\n').map((s) => s.trim()).filter(Boolean), colors: v.colors.split(',').map((s) => s.trim()).filter(Boolean), img, soft: v.soft, active: v.active }
+    const rec = { collection: v.collection, name: v.name.trim(), note: v.note.trim(), facts: v.facts.split('\n').map((s) => s.trim()).filter(Boolean), colors: v.colors.split(',').map((s) => s.trim()).filter(Boolean), img, soft: v.soft, active: v.active, price: Math.max(0, Math.round(Number(v.price) || 0)) }
     if (cur) { C.items.update(cur.id, rec); log('piece edited', rec.name) } else { let nid = `${rec.collection}-${slugify(rec.name) || 'piece'}`, n = 2; while (C.items.get(nid)) nid = `${nid.replace(/-\d+$/, '')}-${n++}`; C.items.insert({ id: nid, ...rec }); log('piece added', rec.name) }
     toast.show(`${rec.name} saved`); d.close()
   })
