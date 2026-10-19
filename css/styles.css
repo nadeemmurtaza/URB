@@ -662,6 +662,8 @@ main { overflow-x: clip; }
   .hero__note--2 { inset-block-start: 0; inset-inline-end: 0; }
 }
 
+.tag--out { background: var(--ink-3); }
+.btn[disabled] { opacity: 0.45; pointer-events: none; }
 /* Annotated pictures, as on URB's posts: handwritten facts and funny asides around the photo, each clear of it */
 .fig { position: relative; display: block; }
 .fig .cut { display: block; width: 100%; height: auto; }

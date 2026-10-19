@@ -23,3 +23,7 @@ npm run deploy          # npx wrangler deploy  ->  https://urb.<your-subdomain>.
 ```
 
 Or connect the GitHub repo in Cloudflare (Workers & Pages, Create, Import a repository) with build command empty and deploy command `npx wrangler deploy`. For CI, set `CLOUDFLARE_API_TOKEN` (Workers Scripts: Edit) and `CLOUDFLARE_ACCOUNT_ID`.
+
+## Admin panel (`/admin/`)
+Built on the shared library (daisyUI 5 + Tailwind v4, no framework). Double sidebar (rail + section panel), horizontal view tabs, breadcrumbs, global search, dark mode, BOM (materials, recipes, make list). Demo logins in `admin/brand.js`; data lives in the browser (localStorage) and is shared with the storefront. BOM seed costs are estimates.
+`npm run admin:sync` copies the library in; `npm run admin:css` rebuilds `admin/admin.css`.

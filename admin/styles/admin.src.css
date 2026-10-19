@@ -1,0 +1,88 @@
+/* URB admin theme: colours measured from the URB logo and cover (see docs/DESIGN-SYSTEM.md), expressed in the library's daisyUI/OKLCH format.
+   Edit values here and only here to rebrand the admin. Build: npm run admin:css */
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: false;
+}
+@import "../library/tokens/tokens.css";
+@plugin "daisyui/theme" {
+  name: "urb";
+  default: true;
+  color-scheme: light;
+  --color-base-100: oklch(99% 0.011 85);
+  --color-base-200: oklch(95% 0.022 83);
+  --color-base-300: oklch(89% 0.032 80);
+  --color-base-content: oklch(28% 0.033 354);
+  --color-primary: oklch(49% 0.089 3);
+  --color-primary-content: oklch(99% 0.011 85);
+  --color-secondary: oklch(50% 0.094 118);
+  --color-secondary-content: oklch(99% 0.011 85);
+  --color-accent: oklch(57% 0.168 14);
+  --color-accent-content: oklch(99% 0.011 85);
+  --color-neutral: oklch(32% 0.058 2);
+  --color-neutral-content: oklch(96% 0.025 81);
+  --color-info: oklch(53% 0.098 251);
+  --color-info-content: oklch(98% 0.007 248);
+  --color-success: oklch(54% 0.098 150);
+  --color-success-content: oklch(98% 0.010 155);
+  --color-warning: oklch(64% 0.128 75);
+  --color-warning-content: oklch(23% 0.042 71);
+  --color-error: oklch(49% 0.148 29);
+  --color-error-content: oklch(98% 0.011 31);
+  --radius-selector: 999px;
+  --radius-field: 0.625rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "urb-dark";
+  prefersdark: true;
+  color-scheme: dark;
+  --color-base-100: oklch(24% 0.027 355);
+  --color-base-200: oklch(21% 0.025 352);
+  --color-base-300: oklch(18% 0.021 351);
+  --color-base-content: oklch(94% 0.021 72);
+  --color-primary: oklch(72% 0.095 1);
+  --color-primary-content: oklch(22% 0.044 2);
+  --color-secondary: oklch(78% 0.114 117);
+  --color-secondary-content: oklch(24% 0.043 117);
+  --color-accent: oklch(70% 0.139 10);
+  --color-accent-content: oklch(21% 0.046 5);
+  --color-neutral: oklch(30% 0.034 348);
+  --color-neutral-content: oklch(94% 0.021 72);
+  --color-info: oklch(72% 0.081 252);
+  --color-info-content: oklch(22% 0.037 254);
+  --color-success: oklch(73% 0.095 152);
+  --color-success-content: oklch(22% 0.035 155);
+  --color-warning: oklch(78% 0.124 80);
+  --color-warning-content: oklch(23% 0.042 71);
+  --color-error: oklch(70% 0.134 27);
+  --color-error-content: oklch(21% 0.049 28);
+  --radius-selector: 999px;
+  --radius-field: 0.625rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@import "../library/styles/components/admin/admin.css";
+@source "../**/*.js";
+@source "../index.html";
+/* Classes built from a variable in JS (tones) cannot be detected, so they are listed here. */
+@source inline("{badge,alert,btn}-{info,primary,secondary,accent,neutral,success,warning,error}");
+@source inline("badge-{soft,ghost,xs,sm}");
+@source inline("text-{error,success,warning,base-content}");
+
+:root { --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif; --font-display: "Rubik", "Nunito", ui-sans-serif, system-ui, sans-serif; }
+body { font-family: var(--font-sans); }
+h1, h2, h3, .admin-brand, .admin-stat__value, .admin-drawer__title { font-family: var(--font-display); }
+
+.admin-legend i.t-info { background: var(--color-info); } .admin-legend i.t-primary { background: var(--color-primary); } .admin-legend i.t-warning { background: var(--color-warning); } .admin-legend i.t-secondary { background: var(--color-secondary); } .admin-legend i.t-success { background: var(--color-success); } .admin-legend i.t-error { background: var(--color-error); } .admin-legend i.t-neutral { background: var(--color-neutral); }
