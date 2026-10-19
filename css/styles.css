@@ -152,9 +152,10 @@ button { cursor: pointer; background: none; border: 0; padding: 0; touch-action:
 .hero__kicker { display: flex; align-items: center; gap: var(--s-2); transform: rotate(-3deg); width: fit-content; }
 .hero .mega { margin-top: var(--s-1); }
 .hero__flower { position: relative; z-index: 2; display: block; width: min(100%, 520px); margin-top: calc(-1 * var(--s-5)); margin-bottom: var(--s-6); margin-inline: auto; }
-.hero__flower .cut { width: 100%; height: auto; filter: drop-shadow(var(--shadow-cut)); animation: bob 8s var(--ease-panel) infinite alternate; transform-origin: 50% 80%; }
+.hero__plant { display: block; position: relative; animation: bob 8s var(--ease-panel) infinite alternate; transform-origin: 50% 80%; }
+.hero__flower .cut { display: block; width: 100%; height: auto; filter: drop-shadow(var(--shadow-cut)); }
 @keyframes bob { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(calc(-1 * var(--s-3))) rotate(2deg); } }
-@media (prefers-reduced-motion: reduce) { .hero__flower .cut { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .hero__plant { animation: none; } }
 .hero__note { position: absolute; z-index: 3; display: grid; gap: var(--s-1); }
 .hero__note .hand { transform: rotate(-4deg); }
 .hero__note--1 { inset-block-start: 14%; inset-inline-start: 2%; }
@@ -181,19 +182,10 @@ button { cursor: pointer; background: none; border: 0; padding: 0; touch-action:
 .scatter__p { max-width: 10em; position: relative; z-index: 1; }
 .scatter__cuts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3) var(--s-5); align-items: end; }
 .cut { width: 100%; height: auto; object-fit: contain; filter: drop-shadow(var(--shadow-cut)); transition: transform var(--dur-content) var(--ease-settle); }
-.scatter__cuts .cut { width: clamp(96px, 24vw, 200px); }
-.scatter__cuts .cut:nth-child(odd) { transform: rotate(-6deg); }
-.scatter__cuts .cut:nth-child(even) { transform: rotate(5deg) translateY(calc(-1 * var(--s-3))); }
-.scatter__cuts .cut:hover { transform: rotate(0) scale(1.08); }
-@media (min-width: 1024px) {
-  .scatter { min-height: 520px; align-content: center; }
-  .scatter__cuts { display: contents; }
-  .scatter__cuts .cut { position: absolute; width: clamp(110px, 11vw, 170px); }
-  .scatter__cuts .cut:nth-child(1) { inset-block-start: 4%; inset-inline-start: var(--s-3); }
-  .scatter__cuts .cut:nth-child(2) { inset-block-start: 0; inset-inline-end: var(--s-4); }
-  .scatter__cuts .cut:nth-child(3) { inset-block-end: 4%; inset-inline-start: 6%; }
-  .scatter__cuts .cut:nth-child(4) { inset-block-end: 2%; inset-inline-end: 6%; }
-}
+.scatter__cuts .fig { width: clamp(96px, 24vw, 200px); }
+.scatter__cuts .fig:nth-child(odd) { transform: rotate(-6deg); }
+.scatter__cuts .fig:nth-child(even) { transform: rotate(5deg) translateY(calc(-1 * var(--s-3))); }
+.scatter__cuts .fig:hover { transform: rotate(0) scale(1.08); }
 
 /* Craft index: giant words with the thing itself beside them */
 .index { display: grid; }
@@ -505,7 +497,9 @@ body[data-page="product"] { padding-bottom: 84px; }
 .tl__quote { font: 700 clamp(2.1rem, 1.1rem + 4.4vw, 4.6rem)/0.98 var(--font-display); letter-spacing: -0.03em; }
 .tl__note { color: var(--ink-2); max-width: 28em; font-size: var(--fs-lg); line-height: 1.45; }
 .tl__art { display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: end; justify-content: center; position: relative; }
-.tl__art .cut { width: clamp(120px, 30vw, 240px); height: auto; }
+.tl__art .fig { width: clamp(120px, 30vw, 240px); }
+.tl__art .fig--art { width: min(100%, 420px); }
+.tl__art .fig .art--soft { width: 100%; }
 .tl__art .art--soft { width: min(100%, 420px); height: auto; }
 .tl__art .doodle { inset-block-start: 0; inset-inline-end: var(--s-3); }
 @media (min-width: 1024px) {
@@ -631,7 +625,7 @@ main { overflow-x: clip; }
 .icon-btn:hover { transform: none; background: var(--mauve-wash); }
 
 /* Quiet cut-outs: no tilt anywhere */
-.scatter__cuts .cut:nth-child(odd), .scatter__cuts .cut:nth-child(even), .scatter__cuts .cut:hover { transform: none; }
+.scatter__cuts .fig:nth-child(odd), .scatter__cuts .fig:nth-child(even), .scatter__cuts .fig:hover { transform: none; }
 .index__row:hover .index__img { transform: translateY(-4px); }
 .index__row:hover .index__w { transform: none; color: var(--script); }
 .btn--ink:hover { transform: translateY(-1px); }
@@ -670,3 +664,87 @@ main { overflow-x: clip; }
 
 .tag--out { background: var(--ink-3); }
 .btn[disabled] { opacity: 0.45; pointer-events: none; }
+/* Annotated pictures, as on URB's posts: handwritten facts and funny asides around the photo, each clear of it */
+.fig { position: relative; display: block; }
+.fig .cut { display: block; width: 100%; height: auto; }
+.parcel, .split2__art { position: relative; }
+:is(.fig, .parcel, .split2__art):has(> .note--top) { padding-block-start: calc(var(--s-8) + var(--s-3)); }
+:is(.fig, .parcel, .split2__art):has(> .note--bot) { padding-block-end: calc(var(--s-7) + var(--s-3)); }
+.note { position: absolute; z-index: 2; display: grid; justify-items: center; gap: var(--s-2); pointer-events: none; width: max-content; max-width: 10em; }
+.note .hand { font: 700 var(--fs-note)/1.1 var(--font-note); letter-spacing: 0; text-transform: none; text-align: center; }
+.note .doodle { position: static; }
+.note--top { inset-block-start: 0; inset-inline-start: 50%; translate: -50% 0; }
+.note--bot { inset-block-end: 0; inset-inline-start: 50%; translate: -50% 0; }
+.note--arrow .doodle { width: auto; height: var(--s-7); }
+.note--tag .doodle { width: 100%; height: auto; }
+.note--cheer { display: flex; align-items: center; gap: var(--s-2); }
+.note--cheer .doodle { width: var(--s-5); flex: none; }
+.scatter__cuts { row-gap: var(--s-5); }
+
+/* Empty space only: on tablet and up, arrows sit beside a cut-out; on photos, notes sit in the faded corners */
+.n-h { display: none; }
+.note--corner { translate: none; max-width: 8em; gap: var(--s-1); text-shadow: 0 0 var(--s-2) var(--cream), 0 0 var(--s-1) var(--cream); }
+.note--tl { inset: var(--s-2) auto auto var(--s-2); justify-items: start; }
+.note--tr { inset: var(--s-2) var(--s-2) auto auto; justify-items: end; }
+.note--bl { inset: auto auto var(--s-2) var(--s-2); justify-items: start; }
+.note--br { inset: auto var(--s-2) var(--s-2) auto; justify-items: end; }
+.note--tl .hand, .note--bl .hand { text-align: start; } .note--tr .hand, .note--br .hand { text-align: end; }
+.note--corner.note--arrow .doodle { width: var(--s-6); height: auto; }
+.note--tl .doodle--arrow-curl { rotate: 90deg; } .note--tr .doodle--arrow-curl { rotate: 180deg; } .note--br .doodle--arrow-curl { scale: -1 1; }
+@media (min-width: 768px) {
+  .note--side { inset-block: var(--s-6) auto; translate: none; display: flex; align-items: center; gap: var(--s-3); max-width: none; }
+  .note--side .hand { max-width: 7em; }
+  .note--l { inset-inline: auto calc(100% + var(--s-3)); }
+  .note--r { inset-inline: calc(100% + var(--s-3)) auto; flex-direction: row-reverse; }
+  .note--l .hand { text-align: end; } .note--r .hand { text-align: start; }
+  .note--side .n-v { display: none; }
+  .note--side .n-h { display: block; width: var(--s-7); height: auto; }
+  .note--r .n-h { scale: -1 1; }
+  :is(.fig, .parcel, .split2__art):has(> .note--top.note--side) { padding-block-start: 0; }
+  .fig:has(> .note--l) { margin-inline-start: 10em; } .fig:has(> .note--r) { margin-inline-end: 10em; }
+}
+
+/* Original shop photos: square, shown whole, no cut-out effects */
+.card__media:has(.art--orig) { aspect-ratio: 1; }
+.art--orig { object-fit: cover; filter: none; border-radius: var(--r-md); }
+.card__media .art.art--orig, .pdp__main .art.art--orig { filter: none; object-position: 50% 50%; }
+.pdp__main:has(.art--orig) { aspect-ratio: 1; }
+.card:hover .card__media .art--orig { transform: scale(1.03); }
+
+/* No thumbnail column any more: the photo takes the whole gallery */
+.pdp__gallery { grid-template-columns: minmax(0, 1fr); }
+.pdp__main { width: 100%; }
+
+/* Scatter: a plain row of four, so notes never run into the headline or the ribbon above */
+@media (min-width: 1024px) {
+  .scatter { gap: var(--s-7); }
+  .scatter__cuts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); align-items: end; width: 100%; }
+  .scatter__cuts .fig { position: relative; width: 100%; max-width: 260px; justify-self: center; }
+}
+
+/* Hero notes live in room reserved around the flower, never on it; arrows point in and stop short */
+.hero__flower { padding-block: calc(var(--s-8) + var(--s-5)) calc(var(--s-8) + var(--s-6)); }
+.hero__note { max-width: 9em; gap: var(--s-2); }
+.hero__note .doodle { width: var(--s-6); height: auto; }
+.hero__note--1 { display: grid; inset: 0 auto auto 4%; justify-items: start; text-align: start; }
+.hero__note--1 .hand { order: 0; }
+.hero__note--1 .doodle { rotate: 90deg; margin-inline-start: var(--s-3); }
+.hero__note--2 { inset: 0 4% auto auto; justify-items: end; text-align: end; }
+.hero__note--3 { inset: auto auto 0 4%; justify-items: start; }
+@media (min-width: 1024px) {
+  .hero__note--1, .hero__note--3 { inset-inline-start: 12%; }
+  .hero__note--2 { inset-inline-end: 4%; }
+}
+.hero__note--3 { max-width: 14em; }
+
+/* A drawn stem growing from the poppy, part of the same plant so it moves with it */
+.hero__flower .cut { position: relative; z-index: 2; }
+.hero__stem { inset-block-start: 70%; inset-inline-start: 46%; width: auto; height: calc(var(--s-8) + var(--s-7)); z-index: 1; stroke: var(--olive-deep); }
+.hero__stem path { stroke-width: 7px; }
+.hero__stem path:nth-child(n+2) { stroke-width: 4px; fill: color-mix(in srgb, var(--olive-deep) 30%, transparent); }
+
+/* Stem scales with the flower. Its strokes scale with it too (no fixed-pixel strokes, which break the draw-on dash at large sizes) */
+.hero__stem { height: 88%; }
+.hero__stem path { vector-effect: none; stroke-width: 6.5; }
+.hero__stem path:nth-child(n+2) { stroke-width: 3.5; }
+@media (min-width: 1024px) { .hero__flower { padding-block-end: calc(var(--s-8) * 2 + var(--s-6)); } }

@@ -2,9 +2,10 @@
    delivery fee are taken from plutopakistan.com/stores/urb-394. Photos are URB's own product
    photos from that listing. Occasions and one-line descriptions are demo copy. */
 window.URB_DATA = (function () {
-  var SOFT = ['lily', 'mystic-bloom']; /* these two do not cut out cleanly, so the photo is feathered into the page instead */
-  var P = function (id, name, price, was, stock, fee, inside, tags, occ, line) {
-    return { id: id, name: name, price: price, was: was, stock: stock, fee: fee, inside: inside, tags: tags, occ: occ, line: line, photo: 'assets/products/' + id + '.webp', soft: SOFT.indexOf(id) > -1, img: SOFT.indexOf(id) > -1 ? 'assets/products/' + id + '.webp' : 'assets/cut/b-' + id + '.webp' };
+  /* Every product shows its original shop photo. Cut-outs (assets/cut/b-*.webp) exist only for the first 20 bouquets and are used on the home page. */
+  var P = function (id, name, price, was, stock, fee, inside, tags, occ, line, kind) {
+    kind = kind || 'bouquet';
+    return { id: id, name: name, price: price, was: was, stock: stock, fee: fee, inside: inside, tags: kind === 'bouquet' && tags.indexOf('bouquets') < 0 ? ['bouquets'].concat(tags) : tags, occ: occ, line: line, kind: kind, photo: 'assets/products/' + id + '.webp', img: 'assets/products/' + id + '.webp', cut: 'assets/cut/b-' + id + '.webp' };
   };
   var products = [
     P('forget-me-not', "Forget-Me-Not Bouquet", 2650, 0, 8, 180, ["3 forget-me-not stems (15 blooms)"], ["pastel", "under10"], ["gratitude", "justbecause"], "Fifteen small pink blooms on three stems, wrapped in newsprint and ribbon."),
@@ -26,7 +27,45 @@ window.URB_DATA = (function () {
     P('rose-amour', "Rose Amour Bouquet", 14130, 15700, 2, 360, ["2 Thai roses", "4 small roses", "3 forget-me-not stems"], ["roses", "bold"], ["love", "anniversary"], "Deep red, white and pink roses with baby’s-breath, wrapped in newsprint."),
     P('lilly-belle', "Lilly Belle Bouquet", 17100, 19000, 1, 360, ["3 lilies", "1 gerbera", "2 open tulips", "3 small daisies", "2 lavender stems", "2 forget-me-not stems"], ["lilies", "pastel"], ["anniversary", "birthday"], "Pink lilies, daisies and a monstera leaf, arranged in a white pot."),
     P('lily-orchid', "Lily Orchid Bouquet", 17415, 19350, 1, 550, ["3 lilies", "3 orchid flowers", "3 open tulips", "3 small roses"], ["lilies", "bold"], ["anniversary", "love"], "Magenta lilies, a blue lily and tulips in a pink wrap."),
-    P('the-love', "The Love Bouquet", 17505, 19450, 2, 360, ["4 vine glass roses", "6 small roses", "1 pom-pom", "1 small leaf"], ["roses", "bold"], ["love", "anniversary"], "Ten roses in red, pink and yellow, wrapped in bold red.")
+    P('the-love', "The Love Bouquet", 17505, 19450, 2, 360, ["4 vine glass roses", "6 small roses", "1 pom-pom", "1 small leaf"], ["roses", "bold"], ["love", "anniversary"], "Ten roses in red, pink and yellow, wrapped in bold red."),
+    P("dill-flower-stem", "Dill flower stem", 550, 0, 60, 180, [], ["fillers", "under10"], [], "A crocheted dill flower stem, made by hand and sold as a filler stem.", "filler"),
+    P("cymbidium-long-leaf", "Cymbidium long leaf", 1150, 0, 20, 180, [], ["fillers", "under10"], [], "A crocheted cymbidium long leaf, made by hand and sold as a filler stem.", "filler"),
+    P("small-daisy-bud-stem", "Small daisy bud stem", 1800, 0, 30, 180, [], ["fillers", "under10"], [], "A crocheted small daisy bud stem, made by hand and sold as a filler stem.", "filler"),
+    P("small-daisy", "Small daisy", 500, 0, 80, 180, [], ["fillers", "under10"], [], "A crocheted small daisy, made by hand and sold as a filler stem.", "filler"),
+    P("puff-flowers", "Puff flowers", 350, 0, 95, 180, [], ["fillers", "under10"], [], "A crocheted puff flowers, made by hand and sold as a filler stem.", "filler"),
+    P("long-leaf-stem", "Long leaf stem", 800, 0, 30, 180, [], ["fillers", "under10"], [], "A crocheted long leaf stem, made by hand and sold as a filler stem.", "filler"),
+    P("freesia-stem", "Fareesia stem", 1800, 0, 15, 180, [], ["fillers", "under10"], [], "A crocheted fareesia stem, made by hand and sold as a filler stem.", "filler"),
+    P("leaf-stem", "Leaf stem", 600, 0, 40, 180, [], ["fillers", "under10"], [], "A crocheted leaf stem, made by hand and sold as a filler stem.", "filler"),
+    P("baby-breath", "Baby’s breath", 150, 0, 100, 180, [], ["fillers", "under10"], [], "A crocheted baby’s breath, made by hand and sold as a filler stem.", "filler"),
+    P("lily-of-the-valley", "Lily of the valley", 760, 800, 50, 180, [], ["fillers", "lilies", "under10"], [], "A crocheted lily of the valley, made by hand and sold as a filler stem.", "filler"),
+    P("forget-me-not-stem", "Forget-me-not stem", 760, 800, 90, 180, [], ["fillers", "under10"], [], "A crocheted forget-me-not stem, made by hand and sold as a filler stem.", "filler"),
+    P("buds-stem", "Buds stem", 333, 350, 135, 180, [], ["fillers", "under10"], [], "A crocheted buds stem, made by hand and sold as a filler stem.", "filler"),
+    P("open-tulip", "Open tulip", 900, 1000, 70, 180, [], ["stems", "under10"], [], "A crocheted open tulip, made by hand and sold by the stem.", "stem"),
+    P("close-tulip", "Closed tulip", 720, 800, 96, 180, [], ["stems", "under10"], [], "A crocheted closed tulip, made by hand and sold by the stem.", "stem"),
+    P("bud-rose", "Bud rose", 1080, 1200, 40, 180, [], ["stems", "roses", "under10"], [], "A crocheted bud rose, made by hand and sold by the stem.", "stem"),
+    P("valentine-rose", "Valentine rose", 1485, 1650, 56, 180, [], ["stems", "roses", "under10"], [], "A crocheted valentine rose, made by hand and sold by the stem.", "stem"),
+    P("iris-flower", "Iris flower", 1620, 1800, 60, 180, [], ["stems", "under10"], [], "A crocheted iris flower, made by hand and sold by the stem.", "stem"),
+    P("corn-poppy", "Corn poppy", 1980, 2200, 50, 180, [], ["stems", "under10"], [], "A crocheted corn poppy, made by hand and sold by the stem.", "stem"),
+    P("chinese-rose", "Chinese rose", 1350, 1500, 70, 180, [], ["stems", "roses", "under10"], [], "A crocheted chinese rose, made by hand and sold by the stem.", "stem"),
+    P("carnation-flower", "Carnation flower", 1215, 1350, 66, 180, [], ["stems", "under10"], [], "A crocheted carnation flower, made by hand and sold by the stem.", "stem"),
+    P("calla-lily", "Calla lily", 990, 1100, 50, 180, [], ["stems", "lilies", "under10"], [], "A crocheted calla lily, made by hand and sold by the stem.", "stem"),
+    P("lily-flower", "Lily flower", 1620, 1800, 56, 180, [], ["stems", "lilies", "under10"], [], "A crocheted lily flower, made by hand and sold by the stem.", "stem"),
+    P("lewisia-flower", "Lewisia", 1350, 1500, 80, 180, [], ["stems", "under10"], [], "A crocheted Lewisia, made by hand and sold by the stem.", "stem"),
+    P("lavender", "Lavender", 675, 750, 180, 180, [], ["stems", "under10"], [], "A crocheted lavender, made by hand and sold by the stem.", "stem"),
+    P("magnolia-flower", "Magnolia flower", 3150, 3500, 2, 180, [], ["stems", "under10"], [], "A crocheted magnolia flower, made by hand and sold by the stem.", "stem"),
+    P("ping-pong", "Ping pong", 1215, 1350, 50, 180, [], ["stems", "under10"], [], "A crocheted ping pong, made by hand and sold by the stem.", "stem"),
+    P("gesany-flower", "Gesany flower", 1350, 1500, 50, 180, [], ["stems", "under10"], [], "A crocheted Gesany flower, made by hand and sold by the stem.", "stem"),
+    P("dahlia-flower", "Dahlia flower", 2250, 2500, 50, 180, [], ["stems", "under10"], [], "A crocheted dahlia flower, made by hand and sold by the stem.", "stem"),
+    P("peony-flower", "Peony flower", 2250, 2500, 60, 180, [], ["stems", "under10"], [], "A crocheted peony flower, made by hand and sold by the stem.", "stem"),
+    P("large-daisy", "Large daisy", 900, 1000, 2, 180, [], ["stems", "under10"], [], "A crocheted large daisy, made by hand and sold by the stem.", "stem"),
+    P("lotus-flower", "Lotus flower", 3780, 4200, 2, 180, [], ["stems", "under10"], [], "A crocheted lotus flower, made by hand and sold by the stem.", "stem"),
+    P("simple-rose", "Simple rose", 960, 1200, 90, 180, [], ["stems", "roses", "under10"], [], "A crocheted simple rose, made by hand and sold by the stem.", "stem"),
+    P("vine-glass-rose", "Vine glass rose", 1980, 2200, 48, 180, [], ["stems", "roses", "under10"], [], "A crocheted vine glass rose, made by hand and sold by the stem.", "stem"),
+    P("suraj-mukhi-flower", "Suraj Mukhi flower", 2880, 3200, 6, 180, [], ["stems", "sunflowers", "under10"], [], "A crocheted Suraj Mukhi flower, made by hand and sold by the stem.", "stem"),
+    P("sunflower", "Sunflower", 900, 1000, 20, 180, [], ["stems", "sunflowers", "under10"], [], "A crocheted sunflower, made by hand and sold by the stem.", "stem"),
+    P("double-layer-sunflower-bouquet", "Double Layer Sunflower Bouquet", 2700, 3000, 85, 180, [], ["bouquets", "sunflowers", "under10"], [], "A double-layer sunflower bouquet, crocheted by hand and wrapped.", "bouquet"),
+    P("double-thai-rose-bouquet", "Double Thai Rose Bouquet", 6300, 7000, 50, 360, [], ["bouquets", "roses", "under10"], [], "A double thai rose bouquet, crocheted by hand and wrapped.", "bouquet"),
+    P("mahira-wala-phool", "Mahira Wala Phool single flower", 3150, 3500, 50, 180, [], ["stems", "under10"], [], "A crocheted Mahira Wala Phool single flower, made by hand and sold by the stem.", "stem")
   ];
   var occasions = [
     { id: 'love', label: 'Love' }, { id: 'anniversary', label: 'Anniversary' },
@@ -34,7 +73,7 @@ window.URB_DATA = (function () {
     { id: 'getwell', label: 'Get well' }, { id: 'justbecause', label: 'Just because' }
   ];
   var cats = [
-    { id: 'all', label: 'All' }, { id: 'roses', label: 'Roses' }, { id: 'lilies', label: 'Lilies' },
+    { id: 'all', label: 'All' }, { id: 'bouquets', label: 'Bouquets' }, { id: 'stems', label: 'Single flowers' }, { id: 'fillers', label: 'Fillers' }, { id: 'roses', label: 'Roses' }, { id: 'lilies', label: 'Lilies' },
     { id: 'sunflowers', label: 'Sunflowers' }, { id: 'pastel', label: 'Soft' }, { id: 'bold', label: 'Bold' }, { id: 'under10', label: 'Under Rs 10,000' }
   ];
   var collections = [
@@ -76,7 +115,7 @@ window.URB_DATA = (function () {
     var dp = dbRead('products');
     if (dbSeeded('products') && Array.isArray(dp)) {
       products = dp.filter(function (p) { return p.active !== false; }).map(function (p) {
-        return { id: p.id, name: p.name, price: +p.price || 0, was: +p.was || 0, stock: Math.max(0, +p.stock || 0), fee: +p.fee || 0, inside: p.inside || [], tags: p.tags || [], occ: p.occ || [], line: p.line || '', photo: p.photo || p.img, soft: !!p.soft, img: p.img };
+        return { id: p.id, name: p.name, price: +p.price || 0, was: +p.was || 0, stock: Math.max(0, +p.stock || 0), fee: +p.fee || 0, inside: p.inside || [], tags: p.tags || [], occ: p.occ || [], line: p.line || '', photo: p.photo || p.img, soft: !!p.soft, img: p.img, kind: p.kind || 'bouquet', cut: p.cut || p.img };
       });
     }
     var di = dbRead('items');

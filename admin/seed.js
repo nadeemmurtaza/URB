@@ -29,7 +29,7 @@ function recipeFor(p) {
 export function seedAll() {
   C.materials.seed(MATERIALS.map(([id, name, kind, unit, cost, stock, reorder, pack]) => ({ id, name, kind, unit, cost, stock, reorder, pack, supplier: '', notes: '', demo: true, createdAt: 1 })))
   C.boms.seed(base.products.map(recipeFor))
-  C.products.seed(base.products.map((p) => ({ id: p.id, name: p.name, price: p.price, was: p.was || 0, stock: p.stock, fee: p.fee, line: p.line, inside: p.inside, tags: p.tags, occ: p.occ, img: p.img, photo: p.photo, soft: !!p.soft, active: true, createdAt: 1 })))
+  C.products.seed(base.products.map((p) => ({ id: p.id, name: p.name, price: p.price, was: p.was || 0, stock: p.stock, fee: p.fee, line: p.line, inside: p.inside, tags: p.tags, occ: p.occ, img: p.img, photo: p.photo, soft: !!p.soft, kind: p.kind || 'bouquet', cut: p.cut || p.img, active: true, createdAt: 1 })))
   C.items.seed(base.collections.flatMap((c) => c.items.map((it) => ({ id: `${c.id}-${it.id}`, collection: c.id, name: it.name, note: it.note, facts: it.facts || [], colors: it.colors || [], img: it.img, soft: !!it.soft, active: true, createdAt: 1 }))))
   C.promos.seed([{ id: 'promo_welcome', code: D.promo.code, pct: D.promo.pct, active: true, used: 0, expires: '', limit: 0 }])
   C.settings.seed([{ ...DEFAULT_SETTINGS, cities: D.cities }])
