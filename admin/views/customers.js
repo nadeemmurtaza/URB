@@ -40,7 +40,7 @@ export function customers({ params = {} } = {}) {
           { key: 'last', label: 'Last order', sortable: true, render: (c) => `<span class="admin-num">${esc(dates.short(c.last))}</span>` },
         ],
         onRow: (c) => openCustomer(c.id),
-        actions: (c) => [{ id: 'open', label: 'View customer' }, { id: 'order', label: 'New order for them' }],
+        actions: (c) => [{ id: 'open', label: 'View customer' }, ...(auth.can('orders:create') ? [{ id: 'order', label: 'New order for them' }] : [])],
         onAction: async (a, c) => { if (a === 'open') openCustomer(c.id); if (a === 'order') { const { openNewOrder } = await import('./orders.js'); openNewOrder({ name: c.name, phone: c.phone }) } },
         empty: { title: 'No customers yet', body: 'They appear as soon as the first order is placed.' },
       })

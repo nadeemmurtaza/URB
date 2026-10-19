@@ -1,6 +1,6 @@
 // First-visit data. Products and made-to-order pieces come from the real catalogue (js/data.js); orders, customers and
 // enquiries below are FICTIONAL demo rows (flagged demo:true) so the dashboard has something to show. Clear them in Settings.
-import { C, DEFAULT_SETTINGS } from './core.js'
+import { C, DEFAULT_SETTINGS, adjustStock } from './core.js'
 
 const D = window.URB_DATA
 const base = D.defaults || { products: D.products, collections: D.collections }
@@ -49,6 +49,13 @@ export function seedAll() {
     return { id: `URB-${100100 + i}`, at, status, payment: status === 'cancelled' ? 'unpaid' : paid ? 'paid' : 'unpaid', pay, customer: { name: c.name, phone: c.phone, email: '', city: c.city, address: c.address }, items: lines, sub, disc, fee, total: sub - disc + fee, date: d.toISOString().slice(0, 10), slot: pick(slots), msg: r() < 0.4 ? pick(['Happy birthday!', 'Thank you for everything.', 'Love you, always.', 'Congratulations!', 'Get well soon.']) : '', notes: [], history, demo: true, createdAt: at }
   }).sort((a, b) => b.at - a.at)
   C.orders.seed(orders, { merge: true })
+  /* Orders placed on the storefront before the back office was first opened were never taken off stock. Do it now, once, so they cannot be sold twice.
+     The demo orders above carry no `reserved` flag: they are history, and cancelling one must not put stock back. */
+  for (const o of C.orders.all()) {
+    if (o.reserved !== false || !['new', 'confirmed', 'preparing'].includes(o.status)) continue
+    o.items.forEach((i) => adjustStock(i.id, -i.qty, `Order ${o.id} (placed before setup)`))
+    C.orders.update(o.id, { reserved: true })
+  }
   C.enquiries.seed([
     { id: 'enq_1', at: now - 4 * 36e5, name: 'Mahnoor Tariq', email: 'mahnoor@example.com', occasion: 'Birthday', brief: 'A pastel bouquet in blue and cream, about 12 stems, for my sister. Budget around 9,000.', status: 'new', demo: true },
     { id: 'enq_2', at: now - 30 * 36e5, name: 'Kinza Butt', occasion: 'Anniversary', brief: 'Two plushie cats in grey and pink, gift wrapped, for delivery in Lahore.', item: 'Chonky cat', status: 'quoted', quote: 4200, reply: 'Two cats in lilac-grey and pink, wrapped in the urb box. Ready in 7 days.', demo: true },

@@ -154,19 +154,25 @@
   /* ---------- Pages ---------- */
   function mountIndex() {
     var P = function (id) { return byId(id); };
+    /* The admin can hide or delete anything, so a highlight is the preferred piece if it still exists and otherwise the first one that does */
+    var bq = PRODUCTS.filter(function (p) { return p.kind === 'bouquet'; });
+    var star = P('the-love') || bq[0];
+    var coll = function (i, j) { var c = D.collections[i], it = c && (c.items[j] || c.items[0]); return it ? { img: it.img, alt: it.name } : {}; };
     var rows = [
-      { href: 'shop.html', w: 'Bouquets', sub: PRODUCTS.filter(function (p) { return p.kind === 'bouquet'; }).length + ' designs, from ' + fmt(PRODUCTS.filter(function (p) { return p.kind === 'bouquet'; }).reduce(function (m, p) { return Math.min(m, p.price); }, Infinity)), img: P('the-love').cut, alt: 'The Love Bouquet' },
-      { href: 'collection.html?c=stems', w: 'Single stems', sub: '11 inch long, never wilt', img: D.collections[0].items[0].img, alt: 'Corn poppy' },
-      { href: 'collection.html?c=plushies', w: 'Plushies', sub: 'soft and huggable', img: D.collections[1].items[0].img, alt: 'Chonky cat plushie' },
-      { href: 'collection.html?c=wear', w: 'Wear', sub: 'cardigans and tops', img: D.collections[2].items[0].img, alt: 'Patchwork cardigan' },
-      { href: 'collection.html?c=little', w: 'Little things', sub: 'keyrings, swans, gifts', img: D.collections[3].items[1].img, alt: 'Pink daisy bouquet keyring' }
-    ];
+      { href: 'shop.html', w: 'Bouquets', sub: bq.length + ' designs, from ' + fmt(bq.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity)), img: star && star.cut, alt: star && star.name },
+      Object.assign({ href: 'collection.html?c=stems', w: 'Single stems', sub: '11 inch long, never wilt' }, coll(0, 0)),
+      Object.assign({ href: 'collection.html?c=plushies', w: 'Plushies', sub: 'soft and huggable' }, coll(1, 0)),
+      Object.assign({ href: 'collection.html?c=wear', w: 'Wear', sub: 'cardigans and tops' }, coll(2, 0)),
+      Object.assign({ href: 'collection.html?c=little', w: 'Little things', sub: 'keyrings, swans, gifts' }, coll(3, 1))
+    ].filter(function (r) { return r.img; });
     $('#idx').innerHTML = rows.map(function (r, i) { return '<a class="index__row" data-reveal href="' + r.href + '"><span class="index__n">0' + (i + 1) + '</span><span class="index__w">' + r.w + '<span class="index__sub">' + r.sub + '</span></span><img class="index__img" src="' + r.img + '" alt="' + esc(r.alt) + '" width="400" height="400" loading="lazy"><svg class="index__wave" viewBox="0 0 2160 12" preserveAspectRatio="xMinYMid slice" aria-hidden="true"><path pathLength="1" d="M0 6 C9 0 27 12 36 6 C45 0 63 12 72 6 C81 0 99 12 108 6 C117 0 135 12 144 6 C153 0 171 12 180 6 C189 0 207 12 216 6 C225 0 243 12 252 6 C261 0 279 12 288 6 C297 0 315 12 324 6 C333 0 351 12 360 6 C369 0 387 12 396 6 C405 0 423 12 432 6 C441 0 459 12 468 6 C477 0 495 12 504 6 C513 0 531 12 540 6 C549 0 567 12 576 6 C585 0 603 12 612 6 C621 0 639 12 648 6 C657 0 675 12 684 6 C693 0 711 12 720 6 C729 0 747 12 756 6 C765 0 783 12 792 6 C801 0 819 12 828 6 C837 0 855 12 864 6 C873 0 891 12 900 6 C909 0 927 12 936 6 C945 0 963 12 972 6 C981 0 999 12 1008 6 C1017 0 1035 12 1044 6 C1053 0 1071 12 1080 6 C1089 0 1107 12 1116 6 C1125 0 1143 12 1152 6 C1161 0 1179 12 1188 6 C1197 0 1215 12 1224 6 C1233 0 1251 12 1260 6 C1269 0 1287 12 1296 6 C1305 0 1323 12 1332 6 C1341 0 1359 12 1368 6 C1377 0 1395 12 1404 6 C1413 0 1431 12 1440 6 C1449 0 1467 12 1476 6 C1485 0 1503 12 1512 6 C1521 0 1539 12 1548 6 C1557 0 1575 12 1584 6 C1593 0 1611 12 1620 6 C1629 0 1647 12 1656 6 C1665 0 1683 12 1692 6 C1701 0 1719 12 1728 6 C1737 0 1755 12 1764 6 C1773 0 1791 12 1800 6 C1809 0 1827 12 1836 6 C1845 0 1863 12 1872 6 C1881 0 1899 12 1908 6 C1917 0 1935 12 1944 6 C1953 0 1971 12 1980 6 C1989 0 2007 12 2016 6 C2025 0 2043 12 2052 6 C2061 0 2079 12 2088 6 C2097 0 2115 12 2124 6 C2133 0 2151 12 2160 6"/></svg></a>'; }).join('');
   }
   function mountHome() {
     mountIndex();
     var P = function (id) { return byId(id); };
-    $('#feat').innerHTML = ['white-muse', 'velvet-sun', 'blue-hour', 'forget-me-not'].map(P).map(card).join('');
+    var feat = ['white-muse', 'velvet-sun', 'blue-hour', 'forget-me-not'].map(P).filter(Boolean);
+    PRODUCTS.filter(function (p) { return p.kind === 'bouquet' && feat.indexOf(p) < 0; }).slice(0, 4 - feat.length).forEach(function (p) { feat.push(p); });
+    $('#feat').innerHTML = feat.map(card).join('');
     $('#occ').innerHTML = D.occasions.map(function (o) { return '<a class="occ" data-reveal href="shop.html?occ=' + o.id + '">' + o.label + '</a>'; }).join('');
   }
   function mountShop() {
@@ -284,7 +290,7 @@
       var orders = read('urb.orders', []); orders.unshift(o); write('urb.orders', orders);
       /* The same order, in the back office's shape, so it shows up in admin/ straight away. */
       var now = o.at, dbo = read('urb.db.orders', []);
-      dbo.unshift({ id: o.id, at: now, createdAt: now, status: 'new', payment: 'unpaid', pay: o.pay, customer: { name: o.name, phone: o.phone, email: f.elements.email.value.trim(), city: o.city, address: o.address }, items: o.items, sub: t.sub, disc: t.disc, fee: t.fee, total: t.total, date: o.date, slot: o.slot, msg: o.msg, notes: [], history: [{ at: now, status: 'new', by: 'storefront' }], source: 'storefront' });
+      dbo.unshift({ id: o.id, at: now, createdAt: now, status: 'new', payment: 'unpaid', pay: o.pay, customer: { name: o.name, phone: o.phone, email: f.elements.email.value.trim(), city: o.city, address: o.address }, items: o.items, sub: t.sub, disc: t.disc, fee: t.fee, total: t.total, date: o.date, slot: o.slot, msg: o.msg, notes: [], history: [{ at: now, status: 'new', by: 'storefront' }], source: 'storefront', reserved: D.db.seeded('products') });
       write('urb.db.orders', dbo);
       if (D.db.seeded('products')) {
         var dbp = read('urb.db.products', []), mv = read('urb.db.stockmoves', []);
