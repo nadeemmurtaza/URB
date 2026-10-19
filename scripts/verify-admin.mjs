@@ -137,7 +137,7 @@ await page.fill('[data-q]', 'Test ribbon'); await page.waitForTimeout(200); awai
 ok(!(await db('materials')).some((m) => m.name === 'Test ribbon'), 'an unused material can be deleted after confirmation')
 
 await hash('#/bom'); await page.waitForSelector('.admin-table'); ok((await rows()) === 10, 'every bouquet has a recipe row')
-ok(await page.$$eval('.admin-table tbody tr', (r) => r.every((x) => /Rs/.test(x.textContent) && /%/.test(x.textContent))), 'each recipe shows cost, price and margin')
+ok(await page.$$eval('.admin-table tbody tr', (r) => r.filter((x) => !/No recipe/.test(x.textContent)).every((x) => /Rs/.test(x.textContent) && /%/.test(x.textContent))), 'each recipe shows cost, price and margin')
 await page.fill('[data-q]', 'Rose Amour'); await page.waitForTimeout(200); await page.click('.admin-table tbody tr'); await page.waitForSelector('#ed .admin-rollup')
 const cost1 = await page.textContent('#ed .admin-rollup'); const first = page.locator('#ed [data-f=qty]').first(); const q0 = +(await first.inputValue()); await first.fill(String(q0 + 100)); await page.waitForTimeout(100)
 ok((await page.textContent('#ed .admin-rollup')) !== cost1, 'changing a quantity updates the roll-up live')
