@@ -35,7 +35,7 @@ console.log('links checked:', seen.size);
 // 2. Buy flow
 await page.goto(base + '/index.html');
 await page.click('.hero__flower'); await page.waitForURL(/collection\.html\?c=stems/);
-await page.goto(base + '/shop.html'); await page.click('#grid .card:nth-child(1) .card__name a');
+await page.goto(base + '/shop.html'); await page.waitForSelector('#grid .card .card__name a'); await page.click('#grid .card:nth-child(1) .card__name a');
 await page.waitForURL(/product\.html\?id=/); await page.goto(base + '/product.html?id=rose-amour');
 await page.click('[data-intent="add"]');
 ok(await page.isVisible('#pdp #date[aria-invalid="true"]'), 'date validation shows');
