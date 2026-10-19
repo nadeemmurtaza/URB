@@ -22,7 +22,7 @@ const csvCols = [{ key: 'id', label: 'Order' }, { label: 'Placed', value: (o) =>
 export function setStatus(order, status) {
   const by = auth.session()?.email || 'system'
   const patch = { status, history: [...(order.history || []), { at: Date.now(), status, by }] }
-  if (status === 'cancelled') { order.items.forEach((i) => adjustStock(i.id, i.qty, `Order ${order.id} cancelled`)); const back = restoreOrder(C.orders.get(order.id) || order); if (back) toast.show(`${order.id} cancelled. ${back} materials returned to stock.`) }
+  if (status === 'cancelled') { if (order.reserved) { order.items.forEach((i) => adjustStock(i.id, i.qty, `Order ${order.id} cancelled`)); patch.reserved = false }; const back = restoreOrder(C.orders.get(order.id) || order); if (back) toast.show(`${order.id} cancelled. ${back} materials returned to stock.`) }
   if (status === 'delivered' && order.pay === 'cod' && order.payment === 'unpaid') { patch.payment = 'paid'; toast.show('Delivered. Cash on delivery marked as paid.') }
   C.orders.update(order.id, patch); log(`order → ${ORDER_STATUS[status].label}`, order.id)
   if (status === 'preparing') {
@@ -79,6 +79,7 @@ export function openOrder(id) {
 }
 
 export function openNewOrder(prefill = {}) {
+  if (!can('orders:create')) { toast.show('Your role cannot create orders.', 'error'); return }
   const prods = C.products.all().filter((p) => p.active !== false)
   const opts = [['', 'Choose a bouquet']].concat(prods.map((p) => [p.id, `${p.name} · ${money.format(p.price)}${p.stock <= 0 ? ' (out of stock)' : ''}`]))
   const tomorrow = new Date(Date.now() + 864e5).toISOString().slice(0, 10)
@@ -111,7 +112,7 @@ export function openNewOrder(prefill = {}) {
     if (Object.keys(errors).length || !le.hidden) { showErrors(form, errors); if (!le.hidden && !Object.keys(errors).length) lines.querySelector('select').focus(); return }
     const n = Math.max(100099, ...C.orders.all().map((o) => parseInt(String(o.id).replace(/\D/g, ''), 10) || 0)) + 1
     const now = Date.now(), by = auth.session().email
-    const order = C.orders.insert({ id: `URB-${n}`, at: now, status: 'new', payment: 'unpaid', pay: v.pay, customer: { name: v.name.trim(), phone: v.phone, email: v.email, city: v.city, address: v.address.trim() }, items: l.map((x) => ({ id: x.p.id, name: x.p.name, qty: x.qty, price: x.p.price })), sub, disc: 0, fee, total: sub + fee, date: v.date, slot: v.slot, msg: v.msg, notes: [], history: [{ at: now, status: 'new', by }], source: 'admin' })
+    const order = C.orders.insert({ id: `URB-${n}`, at: now, status: 'new', payment: 'unpaid', pay: v.pay, customer: { name: v.name.trim(), phone: v.phone, email: v.email, city: v.city, address: v.address.trim() }, items: l.map((x) => ({ id: x.p.id, name: x.p.name, qty: x.qty, price: x.p.price })), sub, disc: 0, fee, total: sub + fee, date: v.date, slot: v.slot, msg: v.msg, notes: [], history: [{ at: now, status: 'new', by }], source: 'admin', reserved: true })
     l.forEach((x) => adjustStock(x.p.id, -x.qty, `Order ${order.id}`)); log('order created', order.id); toast.show(`Order ${order.id} created`); d.close(); location.hash = `#/orders?open=${order.id}`
   })
   form.querySelector('input')?.focus()
